@@ -10,3 +10,6 @@ const greet = (name) => {
 
 console.log(greet('Arthur.'))
 console.log(greet('Arthur.'))
+// expected output: 
+//  Hello, Arthur. 
+//  Hello, Arthur.
