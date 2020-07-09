@@ -9,4 +9,10 @@ const character = {
 };
 
 console.log(Object.keys(character));
-// expected output: Array ["id","name","race","planet","job"]
+// Expected Output: 
+// This character has a(n) id.
+// This character has a(n) name.
+// This character has a(n) race.
+// This character has a(n) planet.
+// This character has a(n) job.
+// [ 'This character has a(n) id',  'This character has a(n) name',  'This character has a(n) race', 'This character has a(n) planet', 'This character has a(n) job' ]
