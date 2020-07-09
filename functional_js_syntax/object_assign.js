@@ -7,7 +7,7 @@ let state = {
         class: 'Firefly'
     },
     role: 'Pilot',
-    favorite_thing: {
+    favoriteThing: {
         item: "Toy",
         details: {
             type: 'Toy Tyrannosaurus Rex'
@@ -15,7 +15,7 @@ let state = {
     }
 }
 
-const incoming_state = {
+const incomingState = {
     name: 'Mal',
     role: 'Captain',
     favorite_thing: {
@@ -35,7 +35,7 @@ state = Object.assign(state, new_state);
 //         class: "Firefly" 
 //     }, 
 //     role: "Captain", 
-//     favorite_thing: { 
+//     favoriteThing: { 
 //         item: "Not complicated" 
 //     }, 
 //     history: ["Browncoat sergeant"] 
