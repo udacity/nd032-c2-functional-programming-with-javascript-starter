@@ -2,7 +2,7 @@
 // OBJECT FREEZE EXAMPLE from Video
 // ----------------------------------------------------------
 
-const current_show = {
+const currentShow = {
     title: 'Dr. Who',
     seasons: 11,
     current_season: 4
