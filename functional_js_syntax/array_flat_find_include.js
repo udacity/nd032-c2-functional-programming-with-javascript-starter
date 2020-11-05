@@ -5,7 +5,7 @@
 
 const characters = [
     ['Starlord', 'Gamora', 'Groot'],
-    ['Dr. Strange', ['Captain America', 'Bucky Barnes'], ['Thor', 'Hulk', ['Loki']], 'Thanos']
+    ['Dr. Strange', ['Captain America', 'Bucky Barnes'], ['Thor', 'Hulk', ['Loki']], 'Thanos'],
     ['Iron Man', 'Ultron'],
     ['Spider Man', ['Venom']],
     ['Professor X', 'Wolverine', 'Quicksilver', ['Magneto']]
