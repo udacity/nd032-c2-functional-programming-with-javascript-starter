@@ -33,8 +33,11 @@ const sci_fi_shows = ['Manedlorian', 'Enterprise', 'Firefly', 'Battlestar Galact
 // ----------------------------------------------------------
 // 5. For each item in this array, create a multidimensional array containing the entire original array.
 
-const sci_fi_shows = [1, 2, 3, 4]
+const numbers = [1, 2, 3, 4]
 
 // your code
 
 // expected output: Array [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]
+
+// Having trouble with creating a 2D array? 
+// Take a closer look at the last two arguments of map, one of them might be able to help
