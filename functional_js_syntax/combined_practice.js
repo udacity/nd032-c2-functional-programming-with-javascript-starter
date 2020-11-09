@@ -208,4 +208,4 @@ const characters = [
 
 // Your code here
 
-// expected output: 416.9230769230769
+// expected output: 68.71319452795147

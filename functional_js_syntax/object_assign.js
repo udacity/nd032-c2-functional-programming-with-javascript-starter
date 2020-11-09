@@ -18,7 +18,7 @@ let state = {
 const incomingState = {
     name: 'Mal',
     role: 'Captain',
-    favorite_thing: {
+    favoriteThing: {
         item: "Not complicated"
     },
     history: ["Browncoat sergeant"]

@@ -11,7 +11,11 @@ const characters = [
     ['Professor X', 'Wolverine', 'Quicksilver', ['Magneto']]
 ]
 
-const results = characters.flat()
+const results = characters.flat(1)
+// const results = characters.flat(2)
+// const results = characters.flat(3)
+// And what happens if you go past the max depth of the array?
+// const results = characters.flat(5)
 
 // ----------------------------------------------------------
 // FIND EXERCISE

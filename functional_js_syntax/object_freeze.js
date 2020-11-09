@@ -11,16 +11,16 @@
 const currentShow = {
     title: 'Dr. Who',
     seasons: 11,
-    current_season: 4
+    currentSeason: 4
 }
 
 // as a const, we can do this:
-currentShow.current_season = 5
+currentShow.currentSeason = 5
 
 // but if we freeze the object
 Object.freeze(currentShow);
 
-currentShow.current_season = 5;
+currentShow.currentSeason = 5;
 // Throws an error and current_season remains unchanged
 
 
