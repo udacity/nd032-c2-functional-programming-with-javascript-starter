@@ -8,23 +8,23 @@ let store = {
 const root = document.getElementById('root')
 
 const updateStore = (store, newState) => {
-    store = Object.assign(store, newState)
-    render(root, store)
+    Object.assign(store, newState)
+    render(root, store);
 }
 
 const render = async (root, state) => {
-    root.innerHTML = App(state)
+    root.innerHTML = App(state);
 }
 
 
 // create content
 const App = (state) => {
-    let { rovers, apod } = state
+    let { user, rovers, apod } = state;
 
     return `
         <header></header>
         <main>
-            ${Greeting(store.user.name)}
+            ${Greeting(user.name)}
             <section>
                 <h3>Put things on the page!</h3>
                 <p>Here is an example section.</p>
@@ -65,7 +65,7 @@ const Greeting = (name) => {
 
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {
-
+    console.log("apod inside imageOfTheday fun", apod);
     // If image does not already exist, or it is not from today -- request it again
     const today = new Date()
     const photodate = new Date(apod.date)
@@ -87,7 +87,7 @@ const ImageOfTheDay = (apod) => {
         return (`
             <img src="${apod.image.url}" height="350px" width="100%" />
             <p>${apod.image.explanation}</p>
-        `)
+        `);
     }
 }
 
@@ -95,11 +95,11 @@ const ImageOfTheDay = (apod) => {
 
 // Example API call
 const getImageOfTheDay = (state) => {
-    let { apod } = state
 
     fetch(`http://localhost:3000/apod`)
         .then(res => res.json())
-        .then(apod => updateStore(store, { apod }))
-
-    return data
+        .then(apod => {
+            console.log("apod", apod);
+            updateStore(store, { apod })
+        });
 }
