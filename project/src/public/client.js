@@ -1,15 +1,14 @@
-let store = Immutable.fromJS({
-    user: { name: "Student" },
+let store = Immutable.Map({
+    user: Immutable.Map({ name: "Sreejith" }),
     apod: '',
-    rovers: ['Curiosity', 'Opportunity', 'Spirit'],
+    rovers: Immutable.List(['Curiosity', 'Opportunity', 'Spirit']),
 });
 
 // add our markup to the page
 const root = document.getElementById('root')
 
 const updateStore = (store, newState) => {
-    Object.assign(store, newState)
-    console.log("after the state is updated", store);
+    store = store.merge(newState);
     render(root, store);
 }
 
@@ -20,12 +19,11 @@ const render = async (root, state) => {
 
 // create content
 const App = (state) => {
-    let { user, rovers, apod } = state;
 
     return `
         <header></header>
         <main>
-            ${Greeting(user.name)}
+            ${Greeting(state.get("user").get("name"))}
             <section>
                 <h3>Put things on the page!</h3>
                 <p>Here is an example section.</p>
@@ -37,7 +35,7 @@ const App = (state) => {
                     explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
                     but generally help with discoverability of relevant imagery.
                 </p>
-                ${ImageOfTheDay(apod)}
+                ${ImageOfTheDay(state.get("apod"))}
             </section>
         </main>
         <footer></footer>
@@ -64,30 +62,32 @@ const Greeting = (name) => {
     `
 }
 
+const getTodaysDate = () => {
+    const today = new Date();
+    return `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`
+}
+
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {
-    console.log("apod inside imageOfTheday fun", apod);
     // If image does not already exist, or it is not from today -- request it again
-    const today = new Date()
-    const photodate = new Date(apod.date)
-    console.log(photodate.getDate(), today.getDate());
-
-    console.log(photodate.getDate() === today.getDate());
-    if (!apod || apod.date === today.getDate() ) {
-        getImageOfTheDay(store)
+    
+    if (!apod || apod.get("image").get("date") != getTodaysDate() ) {
+        debugger
+        getImageOfTheDay(store);
     }
 
+    if(!apod) return '';
     // check if the photo of the day is actually type video!
-    if (apod.media_type === "video") {
+    if (apod.get("media_type") === "video") {
         return (`
-            <p>See today's featured video <a href="${apod.url}">here</a></p>
-            <p>${apod.title}</p>
-            <p>${apod.explanation}</p>
+            <p>See today's featured video <a href="${apod.get("url")}">here</a></p>
+            <p>${apod.get("title")}</p>
+            <p>${apod.get("explanation")}</p>
         `)
     } else {
         return (`
-            <img src="${apod.image.url}" height="350px" width="100%" />
-            <p>${apod.image.explanation}</p>
+            <img src="${apod.get("image").get("url")}" height="350px" width="100%" />
+            <p>${apod.get("image").get("explanation")}</p>
         `);
     }
 }
@@ -100,7 +100,6 @@ const getImageOfTheDay = (state) => {
     fetch(`http://localhost:3000/apod`)
         .then(res => res.json())
         .then(apod => {
-            console.log("apod", apod);
             updateStore(state, { apod })
         });
 }
