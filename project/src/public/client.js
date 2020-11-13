@@ -19,7 +19,11 @@ const render = async (root, state) => {
 const App = (state) => {
 
     return `
-        <header></header>
+    <header>
+        <ul>
+        ${header(state)}
+        </ul>
+    </header>
         <main>
             ${Greeting(state.get("user").get("name"))}
             <section>
@@ -43,7 +47,13 @@ const App = (state) => {
 // listening for load event because page should load before any JS is called
 window.addEventListener('load', () => {
     render(root, store)
-})
+});
+
+// Utility functions
+const getTodaysDate = () => {
+    const today = new Date();
+    return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+}
 
 // ------------------------------------------------------  COMPONENTS
 
@@ -60,20 +70,21 @@ const Greeting = (name) => {
     `
 }
 
-const getTodaysDate = () => {
-    const today = new Date();
-    return `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`
+const header = (state) => {
+    return state.get("rovers")
+    .map((item) => `<li>${item}</li>`)
+    .reduce((result, rover) => result += rover);
 }
 
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {
     // If image does not already exist, or it is not from today -- request it again
-    
-    if (!apod || apod.get("image").get("date") != getTodaysDate() ) {
+
+    if (!apod || apod.get("image").get("date") != getTodaysDate()) {
         getImageOfTheDay(store);
     }
 
-    if(!apod) return '';
+    if (!apod) return '';
     // check if the photo of the day is actually type video!
     if (apod.get("media_type") === "video") {
         return (`
