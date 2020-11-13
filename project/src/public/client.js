@@ -20,11 +20,11 @@ const App = (state) => {
 
     return `
     <header>
-        <ul>
+      <ul>
         ${header(state)}
-        </ul>
+      </ul>
     </header>
-        <main>
+        <section class="main">
             ${Greeting(state.get("user").get("name"))}
             <section>
                 <h3>Put things on the page!</h3>
@@ -39,7 +39,7 @@ const App = (state) => {
                 </p>
                 ${ImageOfTheDay(state.get("apod"))}
             </section>
-        </main>
+        </section>
         <footer></footer>
     `
 }
