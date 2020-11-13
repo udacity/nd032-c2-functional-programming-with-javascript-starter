@@ -8,14 +8,12 @@ let store = Immutable.Map({
 const root = document.getElementById('root')
 
 const updateStore = (store, newState) => {
-    store = store.merge(newState);
-    render(root, store);
+    render(root, store.merge(newState));
 }
 
 const render = async (root, state) => {
     root.innerHTML = App(state);
 }
-
 
 // create content
 const App = (state) => {
@@ -72,7 +70,6 @@ const ImageOfTheDay = (apod) => {
     // If image does not already exist, or it is not from today -- request it again
     
     if (!apod || apod.get("image").get("date") != getTodaysDate() ) {
-        debugger
         getImageOfTheDay(store);
     }
 
@@ -100,6 +97,6 @@ const getImageOfTheDay = (state) => {
     fetch(`http://localhost:3000/apod`)
         .then(res => res.json())
         .then(apod => {
-            updateStore(state, { apod })
+            updateStore(state, { apod });
         });
 }
