@@ -1,14 +1,15 @@
-let store = {
+let store = Immutable.fromJS({
     user: { name: "Student" },
     apod: '',
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
-}
+});
 
 // add our markup to the page
 const root = document.getElementById('root')
 
 const updateStore = (store, newState) => {
     Object.assign(store, newState)
+    console.log("after the state is updated", store);
     render(root, store);
 }
 
@@ -100,6 +101,6 @@ const getImageOfTheDay = (state) => {
         .then(res => res.json())
         .then(apod => {
             console.log("apod", apod);
-            updateStore(store, { apod })
+            updateStore(state, { apod })
         });
 }
