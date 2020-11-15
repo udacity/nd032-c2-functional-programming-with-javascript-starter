@@ -55,6 +55,10 @@ const getTodaysDate = () => {
     return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
 }
 
+const itemClicked = (item) => {
+    alert("item clicked"+ item );
+}
+
 // ------------------------------------------------------  COMPONENTS
 
 // Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
@@ -72,14 +76,13 @@ const Greeting = (name) => {
 
 const header = (state) => {
     return state.get("rovers")
-        .map((item) => `<li>${item}</li>`)
+        .map((item) => `<li onClick=itemClicked("${item}")>${item}</li>`)
         .reduce((result, rover) => result += rover);
 }
 
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {
     // If image does not already exist, or it is not from today -- request it again
-    debugger
     if (!apod || apod.get("image").get("date") != getTodaysDate()) {
         getImageOfTheDay(store);
     }
@@ -107,14 +110,12 @@ const getImageOfTheDay = (state) => {
 
     fetch(`http://localhost:3000/apod`)
         .then(res => {
-            debugger
             if (res.ok) {
                 return res.json();
             } else {
                 throw new Error('Oops! Something went wrong! Please try again.');
             }
         }).then(apod => {
-            debugger
             if (apod.image.code == 404) {
                 throw new Error(apod.image.msg);
             } else {
