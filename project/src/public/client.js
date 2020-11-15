@@ -72,14 +72,14 @@ const Greeting = (name) => {
 
 const header = (state) => {
     return state.get("rovers")
-    .map((item) => `<li>${item}</li>`)
-    .reduce((result, rover) => result += rover);
+        .map((item) => `<li>${item}</li>`)
+        .reduce((result, rover) => result += rover);
 }
 
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {
     // If image does not already exist, or it is not from today -- request it again
-
+    debugger
     if (!apod || apod.get("image").get("date") != getTodaysDate()) {
         getImageOfTheDay(store);
     }
@@ -106,8 +106,22 @@ const ImageOfTheDay = (apod) => {
 const getImageOfTheDay = (state) => {
 
     fetch(`http://localhost:3000/apod`)
-        .then(res => res.json())
-        .then(apod => {
-            updateStore(state, { apod });
+        .then(res => {
+            debugger
+            if (res.ok) {
+                return res.json();
+            } else {
+                throw new Error('Oops! Something went wrong! Please try again.');
+            }
+        }).then(apod => {
+            debugger
+            if (apod.image.code == 404) {
+                throw new Error(apod.image.msg);
+            } else {
+                updateStore(state, { apod });
+            }
+
+        }).catch(error => {
+            console.log(error.message);
         });
 }
