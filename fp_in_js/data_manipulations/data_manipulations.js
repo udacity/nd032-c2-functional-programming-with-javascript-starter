@@ -1,16 +1,4 @@
-'use strict';
-const fs = require('fs');
-
-// let rawdata = fs.readFileSync('nasa_near_earth_object_API.json');
-let rawdata = fs.readFile('nasa_near_earth_object_API.json', (err, data) => {
-  if (err) throw err;
-  let objects = JSON.parse(data);
-  console.log(objects);
-});
-
-
-let nearEarthObjects = JSON.parse(rawdata);
-console.log(nearEarthObjects);
+var nearEarthObjects = require('./nasa_near_earth_object_API.json');
 
 // The object in the nasa_near_earth_object_API.txt is a copy of real API response from the NASA Near-Earth Object API. 
 // Find the following from the API:
