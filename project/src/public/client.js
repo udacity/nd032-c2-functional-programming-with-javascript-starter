@@ -52,7 +52,7 @@ const getTodaysDate = () => {
 }
 
 const itemClicked = (item) => {
-    // TODO: getRoverDatafromApi(item);
+    getRoverDatafromApi(item);
     // TODO: updateStore(store, { currentRover: item });
 };
 
@@ -137,8 +137,7 @@ const getImageOfTheDay = (state) => {
 
 const getRoverDatafromApi = (rover) => {
     let url = new URL("http://localhost:3000/rover");
-    url.searchParams("name", rover);
-
+    url.searchParams.append("name", rover);
     fetch(url)
         .then(res => {
             if (res.ok) {
