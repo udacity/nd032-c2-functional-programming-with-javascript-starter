@@ -3,6 +3,11 @@ let store = Immutable.Map({
     apod: '',
     currentRover: '',
     rovers: Immutable.List(['Curiosity', 'Opportunity', 'Spirit']),
+    roversData: Immutable.Map({
+        Curiosity: '',
+        Opportunity: '',
+        Spirit: ''
+    })
 });
 
 // add our markup to the page
@@ -28,7 +33,7 @@ const App = (state) => {
     </header>
         <section class="main">
             <section>
-            ${getRoverData(state.get("currentRover"))}
+            ${getRoverData(state, state.get("currentRover"))}
             </section>
         </section>
         <footer></footer>
@@ -47,23 +52,11 @@ const getTodaysDate = () => {
 }
 
 const itemClicked = (item) => {
-    updateStore(store, { currentRover: item });
+    // TODO: getRoverDatafromApi(item);
+    // TODO: updateStore(store, { currentRover: item });
 };
 
 // ------------------------------------------------------  COMPONENTS
-
-// Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
-const Greeting = (name) => {
-    if (name) {
-        return `
-            <h1>Welcome, ${name}!</h1>
-        `
-    }
-
-    return `
-        <h1>Hello!</h1>
-    `
-}
 
 const header = (state) => {
     return state.get("rovers")
@@ -71,18 +64,28 @@ const header = (state) => {
         .reduce((result, rover) => result += rover);
 }
 
-const getRoverData = (currentRover) => {
-    switch (currentRover) {
-        case "":
-            return `Select any rover to see the data`;
-        case "Curiosity":
-            return 'Great you have selected the rover: Curiosity';
-        case "Opportunity":
-            return 'Great you have selected the rover: Opportunity';
-        case "Spirit":
-            return 'Great you have selected the rover: Spirit';
+const getRoverData = (state, currentRover) => {
 
+    if (!currentRover) {
+        return `Select any rover to see the data`;
+    } else {
+        // if(state.get("roversData").get(currentRover)) {
+        //     //TODO: Render UI with existing data
+        // } else {
+        //     //TODO: fetch data from API and update UI
+        // }
     }
+
+    // TODO: switch (currentRover) {
+
+    //     case "Curiosity":
+    //         return 'Great you have selected the rover: Curiosity';
+    //     case "Opportunity":
+    //         return 'Great you have selected the rover: Opportunity';
+    //     case "Spirit":
+    //         return 'Great you have selected the rover: Spirit';
+
+    // }
 }
 
 // Example of a pure function that renders infomation requested from the backend
@@ -126,6 +129,30 @@ const getImageOfTheDay = (state) => {
             } else {
                 updateStore(state, { apod });
             }
+
+        }).catch(error => {
+            console.log(error.message);
+        });
+}
+
+const getRoverDatafromApi = (rover) => {
+    let url = new URL("http://localhost:3000/rover");
+    url.searchParams("name", rover);
+
+    fetch(url)
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            } else {
+                throw new Error('Oops! Something went wrong! Please try again.');
+            }
+        }).then(data => {
+            console.log(data);
+            // if (apod.image.code == 404) {
+            //     throw new Error(apod.image.msg);
+            // } else {
+            //     updateStore(state, { apod });
+            // }
 
         }).catch(error => {
             console.log(error.message);
