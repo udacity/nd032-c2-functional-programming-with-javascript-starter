@@ -4,9 +4,9 @@ let store = Immutable.Map({
     currentRover: '',
     rovers: Immutable.List(['Curiosity', 'Opportunity', 'Spirit']),
     roversData: Immutable.Map({
-        Curiosity: '',
-        Opportunity: '',
-        Spirit: ''
+        "Curiosity": '',
+        "Opportunity": '',
+        "Spirit": ''
     })
 });
 
@@ -52,7 +52,14 @@ const getTodaysDate = () => {
 }
 
 const itemClicked = (item) => {
-    getRoverDatafromApi(item);
+    if (store.get("roversData").item) {
+        console.log("Data already exist");
+        updateStore(store, { currentRover: item })
+    } else {
+        console.log("Data does not exist, Api fetch and update ui");
+        getRoverDatafromApi(item);
+    }
+
     // TODO: updateStore(store, { currentRover: item });
 };
 
@@ -65,27 +72,18 @@ const header = (state) => {
 }
 
 const getRoverData = (state, currentRover) => {
+    return currentRover ? getLatestImages(currentRover) : `Select any rover to see the data`;
+}
 
-    if (!currentRover) {
-        return `Select any rover to see the data`;
-    } else {
-        // if(state.get("roversData").get(currentRover)) {
-        //     //TODO: Render UI with existing data
-        // } else {
-        //     //TODO: fetch data from API and update UI
-        // }
-    }
-
-    // TODO: switch (currentRover) {
-
-    //     case "Curiosity":
-    //         return 'Great you have selected the rover: Curiosity';
-    //     case "Opportunity":
-    //         return 'Great you have selected the rover: Opportunity';
-    //     case "Spirit":
-    //         return 'Great you have selected the rover: Spirit';
-
-    // }
+const getLatestImages = (currentRover) => {
+    const latestPhotos = store.get("roversData").get(currentRover);
+    console.log(latestPhotos);
+    //TODO: do not limit. Use lazy loading instead
+    if(latestPhotos.length>10) latestPhotos = latestPhotos.slice(0,10);
+    const resultHTMLString = latestPhotos.reduce((finalString, singlePhoto)=> {
+        return finalString += `<li><img src="${singlePhoto.img_src}"</li>`;
+    },'');
+    return resultHTMLString;
 }
 
 // Example of a pure function that renders infomation requested from the backend
@@ -146,12 +144,9 @@ const getRoverDatafromApi = (rover) => {
                 throw new Error('Oops! Something went wrong! Please try again.');
             }
         }).then(data => {
-            console.log(data);
-            // if (apod.image.code == 404) {
-            //     throw new Error(apod.image.msg);
-            // } else {
-            //     updateStore(state, { apod });
-            // }
+            
+            let newState = store.set("currentRover", rover).setIn(["roversData", `${rover}`], data.roverData.latest_photos);
+            updateStore(store, newState);
 
         }).catch(error => {
             console.log(error.message);
