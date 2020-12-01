@@ -15,12 +15,14 @@ const currentShow = {
 }
 
 // as a const, we can do this:
-current_show.current_season = 5
+currentShow.current_season = 5
+
+console.log(currentShow);
 
 // but if we freeze the object
-Object.freeze(current_show);
+Object.freeze(currentShow);
 
-current_show.current_season = 5;
+// currentShow.current_season = 5;
 // Throws an error and current_season remains unchanged
 
 
@@ -28,3 +30,14 @@ current_show.current_season = 5;
 
 // ----------------------------------------------------------
 // Directions: Create your own object and freeze it!
+const roman = {
+    name: 'Roman',
+    color: 'Black',
+    breed: 'Lab'
+}
+
+Object.freeze(roman);
+
+roman.name = 'Fred';
+
+console.log(roman);

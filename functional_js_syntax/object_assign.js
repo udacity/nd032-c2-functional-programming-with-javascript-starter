@@ -1,7 +1,6 @@
 // Merge another character into this state. Keep at least one value and change at least one value
 
 let state = {
-    name: 'Wash',
     ship: {
         name: 'Serenity',
         class: 'Firefly'
@@ -10,7 +9,7 @@ let state = {
     favoriteThing: {
         item: "Toy",
         details: {
-            type: 'Toy Tyrannosaurus Rex'
+            type: 'Toy Tyrannosaurus Rex Robot'
         }
     }
 }
@@ -24,7 +23,10 @@ const incomingState = {
     history: ["Browncoat sergeant"]
 }
 
-state = Object.assign(state, new_state);
+state = Object.assign(state, incomingState);
+
+console.log(state)
+
 // Object.assign(target, source)
 
 // Resulting object

@@ -1,8 +1,7 @@
 //immutablejs.js
 // PART 1. Getting and Setting values
 // Given the following object, make an update that turns name to 'Mal' and role to 'Captain'
-
-const state1 = Immutable.Map(const map1 = Immutable.Map({ 
+const map1 = Immutable.Map({ 
     name: 'Wash',
     ship: {
         name: 'Serenity',
@@ -17,7 +16,10 @@ const state1 = Immutable.Map(const map1 = Immutable.Map({
     }
 });
 
+console.log(map1);
+
 // Your Code
+
 
 // -----------------------------------------------------------------
 // -----------------------------------------------------------------
@@ -50,19 +52,19 @@ const numbers = List([1, 2, 3]);
 // We can turn normal JS arrays into Immutable Lists like this:
 const plainArray = [ 1, 2, 3, 4 ]
 const listFromPlainArray = List(plainArray)
-console.log(listFromPlainArray)
+//console.log(listFromPlainArray)
 
 // we can declare a new Immutable List
 const myList = List([ 'stuffed t-rex' ]);
-console.log(Array.from(myList));
+//console.log(Array.from(myList));
 
 // and we can use the set method again to add or update values. Just provide the index first and value second
 const myList1 = myList.set(1, 'toy lightsaber');
-console.log(Array.from(myList1)); // [ "stuffed t-rex", "toy lightsaber" ]
+//console.log(Array.from(myList1)); // [ "stuffed t-rex", "toy lightsaber" ]
 
 // but, in order to not need to supply the index, we can also add new values with push
 const myList2 = myList1.push('Picard bobblehead')
-console.log(Array.from(myList2));
+// console.log(Array.from(myList2));
 
 // YOUR TURN --------------------------------------------------------------------------
 

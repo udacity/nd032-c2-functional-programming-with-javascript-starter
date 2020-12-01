@@ -8,7 +8,7 @@ const characters = [
   },
   {
     name: 'Jabba the Hut',
-    role: 'villain',
+    role: 'Villain',
     universe: 'Star Wars',
     weapon: 'henchmen',
     power_level: 200
@@ -93,29 +93,44 @@ const characters = [
 ]
 
 // ----------------------------------------------------------
-
 // COMBINED PRACTICE 1
-
 // ----------------------------------------------------------
-
 // Create an array containing only the names of Captains from all universes.
-
 // Your Code here
 
+const captain = characters.map(names => names.name);
+console.log(captain);
 // expected output: ['Mal Reynolds', 'Kathryn Janeway']
 
 // ----------------------------------------------------------
-
 // COMBINED PRACTICE 2
-
 // ----------------------------------------------------------
-
 // Group all characters by role in a multidimensional array
-
 // Your Code here
 
-// expected output:
 
+// const role = characters.filter(function(c) {
+//   return c.role === 'Villain';
+// }).map(function(x, y, array) {
+//   return x;
+// });
+
+// console.log(role);
+
+const groupedCharacters = characters
+    .reduce((acc, curr, i, arr) => {
+        acc[curr.universe] = acc[curr.universe] === undefined ? [] : acc[curr.universe]
+        acc[curr.universe].push(curr)
+
+        if (i + 1 == arr.length) {
+            return Object.values(acc)
+        }
+
+        return acc
+}, {})
+
+console.log(groupedCharacters);
+// expected output:
 // [ [ { name: 'Marvin the Paranoid Android',
 //       role: 'First Mate',
 //       universe: 'Hitchhikers Guide to the Galaxy',
@@ -183,17 +198,12 @@ const characters = [
 //       power_level: 120 } ] ]
 
 // ----------------------------------------------------------
-
 // COMBINED PRACTICE 3
-
 // ----------------------------------------------------------
-
 // Create an array containing characters' names who are the only character listed in their universe.
 
 // Your Code here
-
 // expected output: [ Marvin the Paranoid Android, Peter Venkman, Dr. Daniel Jackson ]
-
 // ----------------------------------------------------------
 
 // COMBINED PRACTICE 4

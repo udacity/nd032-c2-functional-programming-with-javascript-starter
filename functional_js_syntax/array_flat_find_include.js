@@ -2,7 +2,6 @@
 // FLAT EXERCISE
 // ----------------------------------------------------------
 // This short list of some marvel characters is abitrarily nested. Experiment with the effect of flattening to various depths.
-
 const characters = [
     ['Starlord', 'Gamora', 'Groot'],
     ['Dr. Strange', ['Captain America', 'Bucky Barnes'], ['Thor', 'Hulk', ['Loki']], 'Thanos']
@@ -10,8 +9,10 @@ const characters = [
     ['Spider Man', ['Venom']],
     ['Professor X', 'Wolverine', 'Quicksilver', ['Magneto']]
 ]
+const results = characters.flat(3);
+console.log(results);
 
-const results = characters.flat()
+
 
 // ----------------------------------------------------------
 // FIND EXERCISE
@@ -29,6 +30,9 @@ const ids = [
     'IUABC'
 ]
 
+const find = ids.find(x => x.includes('ABC'));
+console.log(find, 'test');
+
 
 // ----------------------------------------------------------
 // INCLUDE EXERCISES
@@ -36,7 +40,6 @@ const ids = [
 // 1. It best to use INCLUDES when what the value is does not matter, simply its presence. Imagine the scenario that you are need to check a user's id against a list of admin id's.
 
 const currentUserId = '29nv283bfc0szn16723'
-
 const admins = [
     '02398cn7syap0dmbnv0',
     '2389sakvjhw8e7f09fv',
@@ -47,6 +50,8 @@ const admins = [
     '12mnz09v87bas78fb12',
     '098Xc8x76m3nb4aposi'
 ]
+const test1 = admins.includes(currentUserId);
+console.log(test1);
 
 // ----------------------------------------------------------
 
@@ -71,3 +76,10 @@ const B = [
     '298374naskdj273ubsl',
     '098LKJnsvijevkwejf6'
 ]
+
+const C = A.filter(item => {
+    console.log(B.includes(item))
+    return B.includes(item)
+});
+
+console.log(C)

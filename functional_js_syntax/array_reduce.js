@@ -1,10 +1,12 @@
 // 1. Take this disjointed sentence and turn it into a single string
-const text = ['The ships', 'hung in the sky,', 'much the way', 'that bricks don`t']
-
 // Your Code Here
+const text = ['The ships', 'hung in the sky,', 'much the way', 'that bricks don`t']
+const single = text.reduce((runningTotal, currentValue) => {
+    return runningTotal + ' ' + currentValue
+});
 
+console.log(single);
 // expected output: "The ships hung in the sky, much the way that bricks don't"
-
 // ----------------------------------------------------------
 
 // 2. Return the winning team
@@ -28,7 +30,15 @@ const scores = [
 ]
 
 // Your Code Here
+const winning = scores.reduce((highValue , currentValue) => {
+    if(currentValue.score > highValue.score) {
+        return currentValue;
+    } else {
+        return highValue;
+    }
+});
 
+console.log(winning.team);
 // expected output: "C"
 
 // ----------------------------------------------------------
@@ -58,5 +68,14 @@ const ships = [
 ]
 
 // Your Code Here
+const result = ships.reduce((previous, current) => {
+    const speed = parseInt(current.speed.slice(0, -1))
+    const previousSpeed = parseInt(previous.speed.slice(0, -1))
+    if (speed > previousSpeed) {
+        return current
+    }
+    return previous
+}, { name: "none", speed: "0G"})
 
+console.log(result.name)
 // Expected output: Tie Fighters
