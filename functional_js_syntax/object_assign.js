@@ -24,7 +24,7 @@ const incomingState = {
     history: ["Browncoat sergeant"]
 }
 
-state = Object.assign(state, new_state);
+state = Object.assign(state, incomingState);
 // Object.assign(target, source)
 
 // Resulting object
