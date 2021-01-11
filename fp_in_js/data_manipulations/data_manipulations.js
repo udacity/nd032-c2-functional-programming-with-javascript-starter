@@ -1,6 +1,6 @@
 var nearEarthObjects = require('./nasa_near_earth_object_API.json');
 
-// The object in the nasa_near_earth_object_API.txt is a copy of real API response from the NASA Near-Earth Object API. 
+// The object in the nasa_near_earth_object_API.json is a copy of real API response from the NASA Near-Earth Object API. 
 // Find the following from the API:
 
 // Total Count ---------------------------------------------
