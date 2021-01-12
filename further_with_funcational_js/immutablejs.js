@@ -1,23 +1,39 @@
-//immutablejs.js
+// import immutablejs.js
+const Immutable = require('immutable');
+
 // PART 1. Getting and Setting values
 // Given the following object, make an update that turns name to 'Mal' and role to 'Captain'
-
-const state1 = Immutable.Map(const map1 = Immutable.Map({ 
-    name: 'Wash',
-    ship: {
-        name: 'Serenity',
-        class: 'Firefly'
-    },
-    role: 'Pilot',
-    favorite_thing: {
-        item: "Toy",
-        details: {
-            type: 'Toy Tyrannosaurus Rex'
-        }
-    }
+const map1 = Immutable.Map({ 
+  name: 'Wash',
+  ship: {
+      name: 'Serenity',
+      class: 'Firefly'
+  },
+  role: 'Pilot',
+  favoriteThing: {
+      item: "Toy",
+      details: {
+          type: 'Toy Tyrannosaurus Rex'
+      }
+  }
 });
 
-// Your Code
+const map2 = Immutable.Map({
+  name: 'Mal',
+  role: 'Captain',
+  favoriteThing: {
+      item: "Not complicated"
+      },
+  history: ["Browncoat sergeant"]
+});
+
+// YOUR TURN --------------------------------------------------------------
+// create `map3` immutable object by merging `map1` and `map2`
+
+console.log(map1.toJS())
+console.log(map2.toJS())
+console.log(map3.toJS())
+
 
 // -----------------------------------------------------------------
 // -----------------------------------------------------------------
@@ -28,14 +44,13 @@ const obj = { d: 100, o: 200, g: 300 };
 
 // But thankfully, normal javascript objects are still valid in Immutable
 // Notice that here we can merge a normal object into an Immutable Map
-const map3 = state1.merge(state2, obj);
+const map4 = map1.merge(map2, obj);
 
 // But also notice how different the two are when we console log map3 
-console.log(map3)
+console.log(map4.toJS())
 
 // YOUR TURN --------------------------------------------------------------
 // Can you locate the contents of our variable 'obj' inside the Immutable Map map3?
-console.log(map3)
 
 //Your code
 
@@ -45,15 +60,15 @@ console.log(map3)
 // PART 3. Arrays and Immutable Lists
 
 // An immutable array is called a LIST, and is declared like this:
-const numbers = List([1, 2, 3]);
+const numbers = Immutable.List([1, 2, 3]);
 
 // We can turn normal JS arrays into Immutable Lists like this:
 const plainArray = [ 1, 2, 3, 4 ]
-const listFromPlainArray = List(plainArray)
-console.log(listFromPlainArray)
+const listFromPlainArray = Immutable.List(plainArray)
+console.log(listFromPlainArray.toJS())
 
 // we can declare a new Immutable List
-const myList = List([ 'stuffed t-rex' ]);
+const myList = Immutable.List([ 'stuffed t-rex' ]);
 console.log(Array.from(myList));
 
 // and we can use the set method again to add or update values. Just provide the index first and value second

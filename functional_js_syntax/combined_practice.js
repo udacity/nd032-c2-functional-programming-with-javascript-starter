@@ -110,17 +110,21 @@ const characters = [
 
 // ----------------------------------------------------------
 
-// Group all characters by role in a multidimensional array
+// Group all characters by universe in a multidimensional array
 
 // Your Code here
 
 // expected output:
 
-// [ [ { name: 'Marvin the Paranoid Android',
+// [ 
+//  [ 
+//    { name: 'Marvin the Paranoid Android',
 //       role: 'First Mate',
 //       universe: 'Hitchhikers Guide to the Galaxy',
 //       weapon: 'severe depression',
-//       power_level: 1000 } ],
+//       power_level: 1000 
+//     } 
+//   ],
 //   [ { name: 'Jabba the Hut',
 //       role: 'villain',
 //       universe: 'Star Wars',

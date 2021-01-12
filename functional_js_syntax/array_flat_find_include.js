@@ -5,13 +5,17 @@
 
 const characters = [
     ['Starlord', 'Gamora', 'Groot'],
-    ['Dr. Strange', ['Captain America', 'Bucky Barnes'], ['Thor', 'Hulk', ['Loki']], 'Thanos']
+    ['Dr. Strange', ['Captain America', 'Bucky Barnes'], ['Thor', 'Hulk', ['Loki']], 'Thanos'],
     ['Iron Man', 'Ultron'],
     ['Spider Man', ['Venom']],
     ['Professor X', 'Wolverine', 'Quicksilver', ['Magneto']]
 ]
 
-const results = characters.flat()
+const results = characters.flat(1)
+// const results = characters.flat(2)
+// const results = characters.flat(3)
+// And what happens if you go past the max depth of the array?
+// const results = characters.flat(5)
 
 // ----------------------------------------------------------
 // FIND EXERCISE

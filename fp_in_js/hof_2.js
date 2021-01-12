@@ -1,5 +1,5 @@
-weapons_with_noises = [
-    	{name: 'Phaser', noise: 'bssszzsssss', universe: 'Star Trek'},
+weaponsWithNoises = [
+  {name: 'Phaser', noise: 'bssszzsssss', universe: 'Star Trek'},
 	{name: 'Blaster', noise: 'Pew Pew', universe: 'Star Wars'},
 	{name: 'Sonic Screwdriver', noise: 'Pew Pew', universe: 'Dr. Who'},
 	{name: 'Lightsaber', noise: 'Pew Pew', universe: 'Star Wars'},

@@ -1,4 +1,4 @@
-const api_sample_data = {
+{
   "links": {
     "next": "http://www.neowsapp.com/rest/v1/feed?start_date=2019-12-02&end_date=2019-12-03&detailed=false&api_key=DEMO_KEY",
     "prev": "http://www.neowsapp.com/rest/v1/feed?start_date=2019-11-30&end_date=2019-12-01&detailed=false&api_key=DEMO_KEY",
