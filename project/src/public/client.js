@@ -103,3 +103,4 @@ const getImageOfTheDay = (state) => {
 
     return data
 }
+// Hey check this out
