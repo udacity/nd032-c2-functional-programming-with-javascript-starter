@@ -1,0 +1,10 @@
+Your API key for jasonbwilkes@icloud.com is:
+
+w6XsOPxbyoqvmDAiYnaaImupw6igfShp3E0XS7wC
+You can start using this key to make web service requests. Simply pass your key in the URL when making a web request. Here's an example:
+
+https://api.nasa.gov/planetary/apod?api_key=w6XsOPxbyoqvmDAiYnaaImupw6igfShp3E0XS7wC
+For additional support, please contact us. When contacting us, please tell us what API you're accessing and provide the following account details so we can quickly find you:
+
+Account Email: jasonbwilkes@icloud.com
+Account ID: 3656c4a1-0e6a-4688-b27d-0f21273373a8
