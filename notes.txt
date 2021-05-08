@@ -8,3 +8,7 @@ For additional support, please contact us. When contacting us, please tell us wh
 
 Account Email: jasonbwilkes@icloud.com
 Account ID: 3656c4a1-0e6a-4688-b27d-0f21273373a8
+
+
+Curiosity manifest
+`https://api.nasa.gov/mars-photos/api/v1/manifests/Curiosity/?api_key=${process.env.API_KEY}`
