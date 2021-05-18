@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/server/index.js",
-    "dev": "nodemon src/server/index.js"
+    "dev": "nodemon src/server/index.js",
+    "lint": "eslint src/**/*.js"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +18,10 @@
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
+    "eslint": "^7.26.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-udacity": "^2.0.2",
+    "eslint-plugin-import": "^2.23.2",
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
     "nodemon": "^2.0.7",

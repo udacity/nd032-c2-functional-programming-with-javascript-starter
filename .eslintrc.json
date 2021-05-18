@@ -1,0 +1,10 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 8
+  },
+  "extends": ["udacity", "prettier"],
+  "env": {
+    "node": true,
+    "browser": true
+  }
+}
