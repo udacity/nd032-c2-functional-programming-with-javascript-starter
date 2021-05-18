@@ -1,4 +1,5 @@
 require("dotenv").config();
+
 const express = require("express");
 const fetch = require("node-fetch");
 const path = require("path");
@@ -6,22 +7,33 @@ const path = require("path");
 const app = express();
 const port = 3000;
 
+const apiKey = process.env.API_KEY;
+
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use("/", express.static(path.join(__dirname, "../public")));
 
 // your API calls
-app.get("/mars", async (req, res) => {
-  console.log("hello");
+app.get("/mars-rover", async (req, res) => {
+  try {
+    const response = await fetch(
+      `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=${apiKey}`
+    ).then((res) => res.json());
+
+    res.send(response);
+  } catch (err) {
+    console.log("error: ", err);
+  }
 });
 
 // example API call
 app.get("/apod", async (req, res) => {
   try {
     let image = await fetch(
-      `https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`
+      `https://api.nasa.gov/planetary/apod?api_key=${apiKey}`
     ).then((res) => res.json());
+
     res.send({ image });
   } catch (err) {
     console.log("error:", err);
