@@ -4,15 +4,28 @@ const express = require("express");
 const fetch = require("node-fetch");
 const path = require("path");
 
+const livereload = require("livereload");
+const connectLivereload = require("connect-livereload");
+
 const app = express();
 const port = 3000;
 
 const apiKey = process.env.API_KEY;
 
+const liveReloadServer = livereload.createServer();
+
+app.use(connectLivereload());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use("/", express.static(path.join(__dirname, "../public")));
+
+liveReloadServer.watch(path.join(__dirname, "../public"));
+liveReloadServer.server.once("connection", () => {
+  setTimeout(() => {
+    liveReloadServer.refresh("/");
+  }, 100);
+});
 
 // your API calls
 app.get("/mars-rover", async (req, res) => {
