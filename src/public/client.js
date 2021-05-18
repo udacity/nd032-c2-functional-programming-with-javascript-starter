@@ -1,6 +1,8 @@
+const API_MARS_ROVER = (rover) =>
+  `http://localhost:3000/mars-rover/${rover.toLowerCase()}`;
+
 let store = {
   user: { name: "Student" },
-  apod: "",
   rovers: ["Curiosity", "Opportunity", "Spirit"],
 };
 
@@ -18,10 +20,12 @@ const render = async (root, state) => {
 
 // create content
 const App = (state) => {
-  let { rovers, apod } = state;
+  let { rovers } = state;
+
+  getRoversInfo(state);
 
   return `
-        <header>Mars Dashboard</header>
+        <header>Udacity Project: Mars Dashboard</header>
         <main>
         </main>
         <footer>© Young Bae, 2021</footer>
@@ -35,55 +39,19 @@ window.addEventListener("load", () => {
 
 // ------------------------------------------------------  COMPONENTS
 
-// Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
-const Greeting = (name) => {
-  if (name) {
-    return `
-            <h1>Welcome, ${name}!</h1>
-        `;
-  }
-
-  return `
-        <h1>Hello!</h1>
-    `;
-};
-
-// Example of a pure function that renders infomation requested from the backend
-const ImageOfTheDay = (apod) => {
-  // If image does not already exist, or it is not from today -- request it again
-  const today = new Date();
-  const photodate = new Date(apod.date);
-  console.log(photodate.getDate(), today.getDate());
-
-  console.log(photodate.getDate() === today.getDate());
-  if (!apod || apod.date === today.getDate()) {
-    getImageOfTheDay(store);
-  }
-
-  // check if the photo of the day is actually type video!
-  if (apod.media_type === "video") {
-    return `
-            <p>See today's featured video <a href="${apod.url}">here</a></p>
-            <p>${apod.title}</p>
-            <p>${apod.explanation}</p>
-        `;
-  } else {
-    return `
-            <img src="${apod.image.url}" height="350px" width="100%" />
-            <p>${apod.image.explanation}</p>
-        `;
-  }
-};
-
 // ------------------------------------------------------  API CALLS
 
 // Example API call
-const getImageOfTheDay = (state) => {
-  let { apod } = state;
+const getRoversInfo = async (state) => {
+  let { rovers } = state;
 
-  fetch(`http://localhost:3000/apod`)
-    .then((res) => res.json())
-    .then((apod) => updateStore(store, { apod }));
+  const response = await fetch(API_MARS_ROVER(rovers[0])).then((res) =>
+    res.json()
+  );
 
-  return data;
+  console.log(response);
+
+  // fetch(API_MARS_ROVER)
+  //   .then((res) => res.json())
+  //   .then((apod) => updateStore(store, { apod }));
 };

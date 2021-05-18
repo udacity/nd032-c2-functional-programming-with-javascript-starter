@@ -28,13 +28,21 @@ liveReloadServer.server.once("connection", () => {
 });
 
 // your API calls
-app.get("/mars-rover", async (req, res) => {
+app.get("/mars-rover/:rover", async (req, res) => {
   try {
-    const response = await fetch(
-      `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=${apiKey}`
+    const {
+      params: { rover },
+    } = req;
+
+    if (!rover) {
+      res.status(422).end();
+    }
+
+    const { photo_manifest: photoManifest } = await fetch(
+      `https://api.nasa.gov/mars-photos/api/v1/manifests/${rover}?api_key=${apiKey}`
     ).then((res) => res.json());
 
-    res.send(response);
+    res.send(photoManifest);
   } catch (err) {
     console.log("error: ", err);
   }
