@@ -1,28 +1,33 @@
 const API_MARS_ROVER = (rover) =>
   `http://localhost:3000/mars-rover/${rover.toLowerCase()}`;
 
-let store = {
+let store = Immutable.Map({
   user: { name: "Student" },
-  rovers: ["Curiosity", "Opportunity", "Spirit"],
-};
+  rovers: [{ name: "Curiosity" }, { name: "Opportunity" }, { name: "Spirit" }],
+});
 
 // add our markup to the page
 const root = document.getElementById("root");
 
 const updateStore = (store, newState) => {
-  store = Object.assign(store, newState);
-  render(root, store);
+  const nextStore = Immutable.Map(Object.assign(store, newState));
+
+  if (Immutable.is(store, nextStore)) {
+    return;
+  }
+
+  store = nextStore;
+
+  return render(root, store);
 };
 
 const render = async (root, state) => {
-  root.innerHTML = App(state);
+  root.innerHTML = await App(state);
 };
 
 // create content
-const App = (state) => {
-  let { rovers } = state;
-
-  getRoversInfo(state);
+const App = async (state) => {
+  await getRoversInfo(state);
 
   return `
         <header>Udacity Project: Mars Dashboard</header>
@@ -38,20 +43,51 @@ window.addEventListener("load", () => {
 });
 
 // ------------------------------------------------------  COMPONENTS
+// const RoverInfo = async (rover) => {
+//   return `
+//   <dl>
+//     <dd>name</dd>
+//     <dt>${name}</dt>
+//     <dd>Launch Date</dd>
+//     <dt>${launchDate}</dt>
+//     <dd>Landing Date</dd>
+//     <dt>${landingDate}</dt>
+//     <dd>status</dd>
+//     <dt>${status}</dt>
+//   </dl>
+//   `;
+// };
 
 // ------------------------------------------------------  API CALLS
 
 // Example API call
 const getRoversInfo = async (state) => {
-  let { rovers } = state;
+  const rovers = state.get("rovers");
 
-  const response = await fetch(API_MARS_ROVER(rovers[0])).then((res) =>
-    res.json()
+  const roverInfo = await Promise.all(
+    rovers.map(async ({ name }) => {
+      const {
+        landing_date: landingDate,
+        launch_date: launchDate,
+        status,
+        max_sol: maxSol,
+        photos,
+      } = await fetch(API_MARS_ROVER(name)).then((res) => res.json());
+
+      const recentPhotos = (photos || []).filter(
+        (photo) => photo.sol === maxSol
+      );
+
+      return {
+        name,
+        landingDate,
+        launchDate,
+        status,
+        maxSol,
+        recentPhotos,
+      };
+    })
   );
 
-  console.log(response);
-
-  // fetch(API_MARS_ROVER)
-  //   .then((res) => res.json())
-  //   .then((apod) => updateStore(store, { apod }));
+  return updateStore(store, { rovers: roverInfo });
 };
