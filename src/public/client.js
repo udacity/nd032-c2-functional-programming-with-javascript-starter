@@ -1,10 +1,5 @@
-const API_MARS_ROVER = (rover) =>
-  `http://localhost:3000/mars-rover/${rover.toLowerCase()}`;
-
-let store = Immutable.Map({
-  user: { name: "Student" },
-  rovers: [{ name: "Curiosity" }, { name: "Opportunity" }, { name: "Spirit" }],
-});
+import store from "./store.js";
+import API from "./api.js";
 
 // add our markup to the page
 const root = document.getElementById("root");
@@ -76,7 +71,7 @@ const fetchRoversInfo = async (state) => {
         status,
         max_sol: maxSol,
         photos,
-      } = await fetch(API_MARS_ROVER(name)).then((res) => res.json());
+      } = await fetch(API.marsRover(name)).then((res) => res.json());
 
       const recentPhotos = (photos || []).filter(
         (photo) => photo.sol === maxSol
