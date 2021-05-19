@@ -27,45 +27,49 @@ const render = async (root, state) => {
 
 // create content
 const App = async (state) => {
-  await getRoversInfo(state);
-
   return `
         <header>Udacity Project: Mars Dashboard</header>
         <main>
+          ${RoversInfo(state)}
         </main>
         <footer>© Young Bae, 2021</footer>
     `;
 };
 
 // listening for load event because page should load before any JS is called
-window.addEventListener("load", () => {
-  render(root, store);
+window.addEventListener("load", async () => {
+  await fetchRoversInfo(store);
+  return render(root, store);
 });
 
 // ------------------------------------------------------  COMPONENTS
-// const RoverInfo = async (rover) => {
-//   return `
-//   <dl>
-//     <dd>name</dd>
-//     <dt>${name}</dt>
-//     <dd>Launch Date</dd>
-//     <dt>${launchDate}</dt>
-//     <dd>Landing Date</dd>
-//     <dt>${landingDate}</dt>
-//     <dd>status</dd>
-//     <dt>${status}</dt>
-//   </dl>
-//   `;
-// };
+const RoversInfo = (state) => {
+  const { rovers } = state;
+
+  return `${rovers
+    .map((rover) => {
+      const { name, launchDate, landingDate, status } = rover;
+      return `
+      <dl>
+        <dd>name</dd>
+        <dt>${name}</dt>
+        <dd>Launch Date</dd>
+        <dt>${launchDate}</dt>
+        <dd>Landing Date</dd>
+        <dt>${landingDate}</dt>
+        <dd>status</dd>
+        <dt>${status}</dt>
+      </dl>
+  `;
+    })
+    .join("")}`;
+};
 
 // ------------------------------------------------------  API CALLS
 
-// Example API call
-const getRoversInfo = async (state) => {
-  const rovers = state.get("rovers");
-
+const fetchRoversInfo = async (state) => {
   const roverInfo = await Promise.all(
-    rovers.map(async ({ name }) => {
+    state.get("rovers").map(async ({ name }) => {
       const {
         landing_date: landingDate,
         launch_date: launchDate,
