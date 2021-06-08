@@ -1,5 +1,7 @@
+
+
 let store = {
-    user: { name: "Student" },
+    user: { name: "Rick" },
     apod: '',
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
 }
@@ -104,3 +106,4 @@ const getImageOfTheDay = (state) => {
     return data
 }
 // Hey check this out
+
