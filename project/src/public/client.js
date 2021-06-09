@@ -16,6 +16,11 @@ const render = async (root, state) => {
     root.innerHTML = App(state)
 }
 
+const foo = (data) => {
+  console.log('<<< foo');
+  console.log(data, '<<< data');
+}
+
 
 // create content
 const App = (state) => {
@@ -46,6 +51,7 @@ const App = (state) => {
 // listening for load event because page should load before any JS is called
 window.addEventListener('load', () => {
     render(root, store)
+    getRoverImages();
 })
 
 // ------------------------------------------------------  COMPONENTS
@@ -97,9 +103,13 @@ const ImageOfTheDay = (apod) => {
 const getImageOfTheDay = (state) => {
     let { apod } = state
 
-    fetch(`http://localhost:3000/apod`)
+    return fetch(`http://localhost:3000/apod`)
         .then(res => res.json())
         .then(apod => updateStore(store, { apod }))
+}
 
-    return data
+const getRoverImages = () => {
+  return fetch(`http://localhost:3000/apod`)
+      .then(res => res.json())
+      .then(rovers => foo(rovers));
 }
