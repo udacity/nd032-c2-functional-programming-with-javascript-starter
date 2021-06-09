@@ -89,12 +89,14 @@ const ImageOfTheDay = (apod) => {
             <p>${apod.title}</p>
             <p>${apod.explanation}</p>
         `)
-    } else {
+    } else if(apod.image){
         return (`
             <img src="${apod.image.url}" height="350px" width="100%" />
             <p>${apod.image.explanation}</p>
         `)
     }
+
+    return '';
 }
 
 // ------------------------------------------------------  API CALLS
