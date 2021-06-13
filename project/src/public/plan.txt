@@ -1,0 +1,52 @@
+
+/*
+GRAND SCHEME
+1. Get rover data using store.rovers - Data will be stashed in store.roverData
+2. Get data for each rover, start with manifest, then image data based on date in manifest
+    2a. Data for rover: Landing date, launch date, name, recentPhotos,recentPhotosDate, status
+    2b. Data for images: camera, url
+        a) When rendering, copy camera name into top left corner of photo
+3. Render page with Curiosity as default
+4. Clicking different rover will remove previous rover display and render new in it's place
+
+
+Getting Rover Data
+1. Create a function to fetch rover data (in client.js)
+2. create a new array using map on each Rover from the store.
+    2a. First fetch data from mission manifest (send to server)
+    2b. Using maxDate from previous step, fetch photo data (from server)
+3. Make sure the rover data is a complete object as outlined below 
+4. Update store with the new array, placing in roverData key.
+
+function getRoverData(rovers) {
+    const roverData = rovers.map(data => {
+        const thisRover = rovers[0];
+        fetch(`http://localhost:3000/roverdata?${name}')
+            .then(res = res.json())
+            .then(data => {
+                fetch('http://..../roverphotos?${name}')
+                .then(res = res.json())
+                .then(data => {
+
+                })
+                return data
+            });
+    }
+    res.send(roverData);
+}
+
+*/
+
+// example array (rover data, step 2)
+let roverData = [{'name': 'curiosity'}, {'name': 'opportunity...'}, {'name': 'spirit...'}];
+
+// example object
+let aRover = {
+    'name': 'Curiosity',
+    'landingDate': '2012-08-06',
+    'launchDate': '2011-11-26',
+    'maxDate': '2021-06-01',
+    'recentPhotos': [{'camera': 'FHAZ', 'url': 'https://api.nasa...'}, {'cam..'}]
+}
+
+// https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?earth_date=2021-5-28&api_key=w6XsOPxbyoqvmDAiYnaaImupw6igfShp3E0XS7wC

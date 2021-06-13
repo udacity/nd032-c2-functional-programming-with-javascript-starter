@@ -1,23 +1,157 @@
-/* -------------------  MOBILE  --------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Roboto&display=swap');
 
+/* -------------------  MOBILE  --------------------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+}
 body {
-  display: flex;
-  flex-direction: column;
-  font-family: Arial;
   min-height: 100vh;
+  background-color: #fff;
+  margin: auto;
 }
 
 header {
   /* header styles */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.10), rgba(0, 0, 0, .45)), url(../images/mars_landscape.jpg);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 120px;
+  color: #fff;
+  padding: 20px 0;
 }
 
+header p {
+  /* font-size: 90%; */
+}
+
+hr {
+  width: 70%;
+  margin: 10px;
+}
+
+
+
 main {
+  position: relative;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   flex: 1;
-  padding: 20px;
+  width: 400px;
 }
 
 footer {
   /* footer styles */
+}
+
+nav {
+  font-family: 'Noto Sans JP', sans-serif;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  background-color: #d63a32;
+  color: #fff;
+  width: 100%;
+  font-size: 130%;
+  padding: 0 10px;
+  border: 0;
+}
+
+#status {
+  text-transform: capitalize;
+}
+
+.nav-item {
+  margin-top: 10px;
+  margin-bottom: 0;
+  padding: 5px 10px 10px;
+  border: 0;
+
+}
+
+.selected {
+  background-color: #fff;
+  color: #d63a32;
+  border: 2px solid #fff;
+}
+
+.column {
+  display: flex;
+  margin: auto;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+#stats {
+  padding: 10px;
+  font-size: 110%;
+  width: 400px;
+}
+
+.stats-key {
+  width: 40%;
+  text-align: right;
+  padding: 0 5px;
+}
+.stats-value {
+  width: 60%;
+  text-align: left;
+  padding: 0 5px;
+
+}
+
+.loading {
+  margin: 50% auto;
+  width: 64px;
+  height: 64px;
+}
+
+.rover-photo {
+  position: relative;
+  width: 100%;
+  margin: 30px auto;
+  /* padding: 15px; */
+}
+
+.rover-photo-caption {
+  background-color: rgba(0, 0, 0, 0.20);
+  font-size: 80%;
+  color: #fff;
+  position: absolute;
+  width: 100%;
+  padding: 15px;
+}
+
+.rover-image {
+  width: 400px;
+  /* margin: 10px; */
+}
+
+.first-load {
+  height: 75vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 /* -------------------  TABLET  --------------------- */
@@ -34,5 +168,6 @@ footer {
 /* -------------------  LARGE SCREENS  -------------- */
 
 @media (min-width: 1824px) {
+  
   /* use mobile */
 }

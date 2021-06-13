@@ -1,105 +1,149 @@
 let store = {
-    user: { name: "Student" },
+    user: {
+        name: "Student"
+    },
     apod: '',
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
+    curiosity: '',
 }
 
 // add our markup to the page
-const root = document.getElementById('root')
+const root = document.getElementById('root');
 
 const updateStore = (store, newState) => {
     store = Object.assign(store, newState)
     render(root, store)
 }
 
-const render = async (root, state) => {
-    root.innerHTML = App(state)
+const render = async (root, state) => { 
+    root.innerHTML = App(state);
+    renderStats(state.curiosity);
+    document.querySelectorAll('.nav-item').forEach(x => {
+        x.addEventListener('click', function () {
+            document.querySelector('.selected').classList.remove('selected');
+            x.classList.add('selected');
+            console.log(`${x.innerText}`);
+            getRoverManifest(x.innerText, store);
+        });
+    })
 }
 
+function renderNavItems(rovers) {
+    // we probably need to use immutable here to avoid mutating the navItems string
+    let navItems = '';
+    rovers.forEach((v, i, a) => {
+        navItems = navItems + `<div class="nav-item${(i === 0) ? ' selected' : ''}">${v}</div>\n`;
+    });
+    return navItems;
+}
 
 // create content
-const App = (state) => {
-    let { rovers, apod } = state
-
+const App = (state) => {   
+    let { rovers, apod, curiosity } = state;
     return `
-        <header></header>
-        <main>
-            ${Greeting(store.user.name)}
-            <section>
-                <h3>Put things on the page!</h3>
-                <p>Here is an example section.</p>
-                <p>
-                    One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
-                    the most popular websites across all federal agencies. It has the popular appeal of a Justin Bieber video.
-                    This endpoint structures the APOD imagery and associated metadata so that it can be repurposed for other
-                    applications. In addition, if the concept_tags parameter is set to True, then keywords derived from the image
-                    explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
-                    but generally help with discoverability of relevant imagery.
-                </p>
-                ${ImageOfTheDay(apod)}
-            </section>
-        </main>
-        <footer></footer>
-    `
+    <header class="column">
+            <h1>Mars Rover Dashboard</h1>
+            <p>Select a Rover to view details and recent photos.</p>
+        </header>
+        <nav>
+            ${renderNavItems(state.rovers)}
+        </nav>
+        <div id="stats" class="column">
+            ...LOADING...
+        </div>
+        <div id="photos" class="column">
+            
+        </div>
+    `;
 }
+
+
+
+function renderStats(thisRover) {
+    document.getElementById('stats').innerHTML = `
+        <div class="row"><span class="stats-key">Status:</span><span id="status" class="stats-value">${thisRover.status}</span></div>
+        <div class="row"><span class="stats-key">Name:</span><span id="rover-name" class="stats-value">${thisRover.name}</span></div>
+        <div class="row"><span class="stats-key">Launch Date:</span><span id="launch-date" class="stats-value">${new Date(thisRover.launchDate).toLocaleDateString('en-US', {year: 'numeric', month: 'short', day: 'numeric'})}</span></div>
+        <div class="row"><span class="stats-key">Landing Date:</span><span id="landing-date" class="stats-value">${new Date(thisRover.landingDate).toLocaleDateString('en-US', {year: 'numeric', month: 'short', day: 'numeric'})}</span></div>
+        <div class="row"><span class="stats-key">Mission Duration:</span><span id="time-on-mars" class="stats-value">${thisRover.missionDuration}</span></div>
+        <div class="row"><span class="stats-key">Total Photos:</span><span id="total-photos" class="stats-value">${thisRover.totalPhotos}</span></div>
+        `;
+    renderPhotos(thisRover);
+}
+
+function renderPhotos(thisRover) {
+    document.getElementById('photos').innerHTML = `
+        <hr>
+        <p>Photos from ${new Date(thisRover.maxDate).toLocaleDateString('en-US', {year: 'numeric', month: 'numeric', day: '2-digit'})}</p>
+        <hr>
+        <div id="gallery">
+        </div>
+        `;
+    const gallery = document.getElementById('gallery');
+    fetch(`/photos/${thisRover.name}/${thisRover.maxDate}`)
+        .then(res => res.json())
+        .then(data => {
+            const photos = data.photos;
+            console.log(photos[0]);
+            photos.forEach(x => {
+                const html = `
+                <div class="rover-photo">
+                    <div class="rover-photo-caption">${x.camera.name}, ID ${x.id}</div>
+                    <img class="rover-image" src="${x.img_src}" alt="hi!">
+                </div>
+                `
+                gallery.insertAdjacentHTML('beforeend', html)
+                console.log(x);
+
+            })
+
+        });
+
+
+}
+
+const getCuriosityManifest = (state) => {
+    let {
+        curiosity
+    } = state;
+    let rover = 'curiosity';
+    fetch(`/rover/${rover}`)
+        .then(res => res.json())
+        .then(curiosity => {
+            updateStore(store, {
+                curiosity
+            });
+        });
+    return;
+
+};
+
+const getRoverManifest = (rover, state) => {
+    // let rover = 'curiosity'
+    console.log(rover);
+
+    document.getElementById('stats').innerHTML = `<img class="loading" src="assets/images/loading.gif" alt="">`;
+    document.getElementById('photos').innerHTML = ``;
+    fetch(`/rover/${rover}`)
+        .then(res => res.json())
+        .then(thisRover => {
+            console.log(state);
+            // maybe insert rover data into the store after it has been summoned, so it loads faster next time
+            renderStats(thisRover);
+        });
+};
+
+// const getRoverPhotos = (rover, state) => {
+//     console.log(rover);
+//     fetch(`http://localhost:3000/photos/${rover.name}/${rover.maxDate}`)
+//         .then(res => res.json())
+//         .then(data => {
+//             console.log(data);
+//         });
+// };
+
 
 // listening for load event because page should load before any JS is called
 window.addEventListener('load', () => {
-    render(root, store)
-})
-
-// ------------------------------------------------------  COMPONENTS
-
-// Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
-const Greeting = (name) => {
-    if (name) {
-        return `
-            <h1>Welcome, ${name}!</h1>
-        `
-    }
-
-    return `
-        <h1>Hello!</h1>
-    `
-}
-
-// Example of a pure function that renders infomation requested from the backend
-const ImageOfTheDay = (apod) => {
-
-    // If image does not already exist, or it is not from today -- request it again
-    const today = new Date()
-    const photodate = new Date(apod.date)
-    console.log(photodate.getDate(), today.getDate());
-
-    console.log(photodate.getDate() === today.getDate());
-    if (!apod || apod.date === today.getDate() ) {
-        getImageOfTheDay(store)
-    }
-
-    // check if the photo of the day is actually type video!
-    if (apod.media_type === "video") {
-        return (`
-            <p>See today's featured video <a href="${apod.url}">here</a></p>
-            <p>${apod.title}</p>
-            <p>${apod.explanation}</p>
-        `)
-    } else {
-        return (`
-            <img src="${apod.image.url}" height="350px" width="100%" />
-            <p>${apod.image.explanation}</p>
-        `)
-    }
-}
-
-// ------------------------------------------------------  API CALLS
-
-// Example API call
-const getImageOfTheDay = (state) => {
-    let { apod } = state
-
-    fetch(`http://localhost:3000/apod`)
-        .then(res => res.json())
-        .then(apod => updateStore(store, { apod }))
-
-    return data
-}
+    getCuriosityManifest(store);
+});
