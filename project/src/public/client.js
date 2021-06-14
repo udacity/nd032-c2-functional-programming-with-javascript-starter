@@ -22,7 +22,6 @@ const render = async (root, state) => {
         x.addEventListener('click', function () {
             document.querySelector('.selected').classList.remove('selected');
             x.classList.add('selected');
-            console.log(`${x.innerText}`);
             getRoverManifest(x.innerText, store);
         });
     })
@@ -62,19 +61,20 @@ const App = (state) => {
 function renderStats(thisRover) {
     document.getElementById('stats').innerHTML = `
         <div class="row"><span class="stats-key">Status:</span><span id="status" class="stats-value">${thisRover.status}</span></div>
-        <div class="row"><span class="stats-key">Name:</span><span id="rover-name" class="stats-value">${thisRover.name}</span></div>
         <div class="row"><span class="stats-key">Launch Date:</span><span id="launch-date" class="stats-value">${new Date(thisRover.launchDate).toLocaleDateString('en-US', {year: 'numeric', month: 'short', day: 'numeric'})}</span></div>
         <div class="row"><span class="stats-key">Landing Date:</span><span id="landing-date" class="stats-value">${new Date(thisRover.landingDate).toLocaleDateString('en-US', {year: 'numeric', month: 'short', day: 'numeric'})}</span></div>
         <div class="row"><span class="stats-key">Mission Duration:</span><span id="time-on-mars" class="stats-value">${thisRover.missionDuration}</span></div>
         <div class="row"><span class="stats-key">Total Photos:</span><span id="total-photos" class="stats-value">${thisRover.totalPhotos}</span></div>
         `;
+                // <div class="row"><span class="stats-key">Name:</span><span id="rover-name" class="stats-value">${thisRover.name}</span></div>
+
     renderPhotos(thisRover);
 }
 
 function renderPhotos(thisRover) {
     document.getElementById('photos').innerHTML = `
         <hr>
-        <p>Photos from ${new Date(thisRover.maxDate).toLocaleDateString('en-US', {year: 'numeric', month: 'numeric', day: '2-digit'})}</p>
+        <p>Photos from ${thisRover.maxDate}</p>
         <hr>
         <div id="gallery">
         </div>
@@ -84,7 +84,6 @@ function renderPhotos(thisRover) {
         .then(res => res.json())
         .then(data => {
             const photos = data.photos;
-            console.log(photos[0]);
             photos.forEach(x => {
                 const html = `
                 <div class="rover-photo">
@@ -93,7 +92,6 @@ function renderPhotos(thisRover) {
                 </div>
                 `
                 gallery.insertAdjacentHTML('beforeend', html)
-                console.log(x);
 
             })
 
@@ -119,15 +117,11 @@ const getCuriosityManifest = (state) => {
 };
 
 const getRoverManifest = (rover, state) => {
-    // let rover = 'curiosity'
-    console.log(rover);
-
     document.getElementById('stats').innerHTML = `<img class="loading" src="assets/images/loading.gif" alt="">`;
     document.getElementById('photos').innerHTML = ``;
     fetch(`/rover/${rover}`)
         .then(res => res.json())
         .then(thisRover => {
-            console.log(state);
             // maybe insert rover data into the store after it has been summoned, so it loads faster next time
             renderStats(thisRover);
         });

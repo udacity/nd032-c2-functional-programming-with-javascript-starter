@@ -21,7 +21,6 @@ app.get('/apod', async (req, res) => {
     try {
         let image = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`)
             .then(res => res.json())
-
         res.send({
             image
         })
@@ -68,32 +67,3 @@ app.get('/photos/:name/:date', async (req, res) => {
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
-// retrieve photos?
-// async function getPhotos(rover, date, cameras) {
-//     console.log(`Rover: ${rover}, date: ${date}, cameras: ${cameras}`);
-
-//     let photos = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/${rover}/photos?earth_date=${date}&api_key=${process.env.API_KEY}`)
-//         .then(res => res.json())
-//         .then(data => {
-//             console.log('*********************** STUFF *********************');
-//             const mostRecent = cameras.map(x => {
-//                 // add an object in mostRecent Array with the name, full_name and img_src
-//                 const camera = data.photos.filter(cameras => {
-//                     return cameras.camera.name === x
-//                 });
-
-//                 const thisOne = camera[camera.length - 1];
-
-//                 return {
-//                     name: thisOne.camera.name,
-//                     full_name: thisOne.camera.full_name,
-//                     image: thisOne.img_src
-//                 };
-//             });
-
-//             mostRecent.forEach(x => {
-//                 console.log(x);
-//             });
-//             return mostRecent;
-//         });
-// }
