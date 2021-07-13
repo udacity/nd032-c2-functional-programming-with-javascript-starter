@@ -77,11 +77,11 @@ const ImageOfTheDay = (apod) => {
     }
 
     // check if the photo of the day is actually type video!
-    if (apod.media_type === "video") {
+    if (apod.image.media_type === "video") {
         return (`
-            <p>See today's featured video <a href="${apod.url}">here</a></p>
-            <p>${apod.title}</p>
-            <p>${apod.explanation}</p>
+            <p>See today's featured video <a href="${apod.image.url}">here</a></p>
+            <p>${apod.image.title}</p>
+            <p>${apod.image.explanation}</p>
         `)
     } else {
         return (`
