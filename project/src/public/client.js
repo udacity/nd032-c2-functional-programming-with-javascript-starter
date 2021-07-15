@@ -26,7 +26,12 @@ const App = (state) => {
         <main>
             ${Greeting(store.user.name)}
             <section>
-                <h3>Put things on the page!</h3>
+                <h2>Mars rover project</h3>
+                <div>
+                    <button type="button">${store.rovers[0]}</button>
+                    <button type="button">${store.rovers[1]}</button>
+                    <button type="button">${store.rovers[2]}</button>
+                </div>
                 <p>Here is an example section.</p>
                 <p>
                     One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
