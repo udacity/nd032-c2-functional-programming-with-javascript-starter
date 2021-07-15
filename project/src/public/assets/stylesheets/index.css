@@ -5,6 +5,8 @@ body {
   flex-direction: column;
   font-family: Arial;
   min-height: 100vh;
+  background-image: url("./background.jpg");
+  background-size: 100%;
 }
 
 header {
