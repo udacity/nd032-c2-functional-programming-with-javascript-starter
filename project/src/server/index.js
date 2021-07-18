@@ -14,7 +14,7 @@ app.use('/', express.static(path.join(__dirname, '../public')))
 
 // your API calls
 
-app.get('/apod', async (req, res) => {
+app.get('/manifest', async (req, res) => {
     try {
         let manifests = await fetch(`https://api.nasa.gov/mars-photos/api/v1/manifests/Curiosity?api_key=${process.env.API_KEY}`)
             .then(res => res.json())
@@ -24,7 +24,7 @@ app.get('/apod', async (req, res) => {
     }
 })
 
-app.get('/apod', async (req, res) => {
+app.get('/rovimg', async (req, res) => {
     try {
         let images = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=${process.env.API_KEY}`)
             .then(res => res.json())
