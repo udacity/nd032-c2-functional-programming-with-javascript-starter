@@ -12,9 +12,20 @@ app.use(bodyParser.json())
 
 app.use('/', express.static(path.join(__dirname, '../public')))
 
+// example API call
+app.get('/apod', async (req, res) => {
+    try {
+        let image = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`)
+            .then(res => res.json())
+        res.send({ image })
+    } catch (err) {
+        console.log('error:', err);
+    }
+})
+
 // your API calls
 
-app.get('/manifest', async (req, res) => {
+app.get('/apod', async (req, res) => {
     try {
         let manifests = await fetch(`https://api.nasa.gov/mars-photos/api/v1/manifests/Curiosity?api_key=${process.env.API_KEY}`)
             .then(res => res.json())
@@ -24,24 +35,13 @@ app.get('/manifest', async (req, res) => {
     }
 })
 
-app.get('/rovimg', async (req, res) => {
+app.get('/apod', async (req, res) => {
     try {
         let images = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=${process.env.API_KEY}`)
             .then(res => res.json())
         res.send ({ images })        
     } catch (err) {
         console.log('images loading error:', err);
-    }
-})
-
-// example API call
-app.get('/apod', async (req, res) => {
-    try {
-        let image = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`)
-            .then(res => res.json())
-        res.send({ image })
-    } catch (err) {
-        console.log('error:', err);
     }
 })
 
