@@ -1,14 +1,18 @@
+//const { default: fetch } = require("node-fetch");
+
 let store = Immutable.Map({
     user: { name: "Student" },
     apod: '',
+    manifest: '',
+    latestImg: '',
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
 })
 
 // add our markup to the page
 const root = document.getElementById('root')
 
-const updateStore = (store, newState) => {
-    store = store.merge(Immutable.Map(newState));
+const updateStore = (newStore, newState) => {    
+    store = newStore.merge(Immutable.Map(newState));
     render(root, store)
 }
 
@@ -20,18 +24,16 @@ const render = async (root, state) => {
 // create content
 const App = (state) => {
     let { rovers, apod } = state;
-    console.log(`App apod: ${apod}`);
     
-    //${Greeting(store.user.name)}
     return `
         <header></header>
         <main>            
             <section>
                 <h2>NASA Mars rovers</h2>
                 <div>
-                    <button type="button">${store.getIn(['rovers'])[0]}</button>
-                    <button type="button">${store.getIn(['rovers'])[1]}</button>
-                    <button type="button">${store.getIn(['rovers'])[2]}</button>
+                    <button type="button" id="btn">${store.getIn(['rovers'])[0]}</button>
+                    <button type="button" id="btn">${store.getIn(['rovers'])[1]}</button>
+                    <button type="button" id="btn">${store.getIn(['rovers'])[2]}</button>
                 </div>
                 <p>Here is an example section.</p>
                 <p>
@@ -42,7 +44,7 @@ const App = (state) => {
                     explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
                     but generally help with discoverability of relevant imagery.
                 </p>        
-                ${ImageOfTheDay(apod)}        
+                ${ImageOfTheDay(state.get("apod"))}   
             </section>
         </main>
         <footer></footer>
@@ -71,17 +73,15 @@ const Greeting = (name) => {
 
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {    
-    
     // If image does not already exist, or it is not from today -- request it again
-    const today = new Date()
+    const today = new Date();
     if (!apod || apod === '') {
         getImageOfTheDay(store);
     } else {
-        const photodate = new Date(apod.date)
+        const photodate = new Date(apod.date);
         console.log(photodate.getDate(), today.getDate());
 
         console.log(photodate.getDate() === today.getDate());
-        console.log(`Imageoftheday apod: ${apod}`);
         // check if the photo of the day is actually type video!
         if (apod.image.media_type === "video") {
             return (`
@@ -102,11 +102,21 @@ const ImageOfTheDay = (apod) => {
 
 // Example API call
 const getImageOfTheDay = (state) => {
-    let { apod } = state
-
+    let { apod } = state;
+    
     fetch(`http://localhost:3000/apod`)
         .then(res => res.json())
         .then(apod => updateStore(store, { apod }))
-
+        .catch(err => console.error('@@@', err))
+        
     return apod;
+}
+
+const getManifest = (state) => {
+    let { manifest } = state;
+    console.log('getManifest function');
+
+    fetch(`http://localhost:3000/manifest`)
+        .then(res => res.json())
+        .then(manifest => updateStore(store, { manifest }))
 }

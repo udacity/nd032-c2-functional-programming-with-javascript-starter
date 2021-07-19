@@ -25,21 +25,21 @@ app.get('/apod', async (req, res) => {
 
 // your API calls
 
-app.get('/apod', async (req, res) => {
+app.get('/manifest', async (req, res) => {
     try {
-        let manifests = await fetch(`https://api.nasa.gov/mars-photos/api/v1/manifests/Curiosity?api_key=${process.env.API_KEY}`)
+        let manifest = await fetch(`https://api.nasa.gov/mars-photos/api/v1/manifests/Curiosity?api_key=${process.env.API_KEY}`)
             .then(res => res.json())
-        res.send({ manifests })        
+        res.send({ manifest })        
     } catch (err) {
         console.log('manifest loading error:', err);
     }
 })
 
-app.get('/apod', async (req, res) => {
+app.get('/latestImg', async (req, res) => {
     try {
-        let images = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=${process.env.API_KEY}`)
+        let latestImg = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=${process.env.API_KEY}`)
             .then(res => res.json())
-        res.send ({ images })        
+        res.send ({ latestImg })        
     } catch (err) {
         console.log('images loading error:', err);
     }
