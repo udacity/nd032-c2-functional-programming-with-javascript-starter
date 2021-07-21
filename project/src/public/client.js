@@ -1,7 +1,6 @@
-//const { default: fetch } = require("node-fetch");
-
 let store = Immutable.Map({
     user: { name: "Student" },
+    currentRover: '',
     apod: '',
     manifest: '',
     latestImg: '',
@@ -31,9 +30,9 @@ const App = (state) => {
             <section>
                 <h2>NASA Mars rovers</h2>
                 <div>
-                    <button type="button" id="btn">${store.getIn(['rovers'])[0]}</button>
-                    <button type="button" id="btn">${store.getIn(['rovers'])[1]}</button>
-                    <button type="button" id="btn">${store.getIn(['rovers'])[2]}</button>
+                    <button type="button" onClick=loadRoverData(this)>${store.getIn(['rovers'])[0]}</button>
+                    <button type="button" onClick=loadRoverData(this)>${store.getIn(['rovers'])[1]}</button>
+                    <button type="button" onClick=loadRoverData(this)>${store.getIn(['rovers'])[2]}</button>
                 </div>
                 <p>Here is an example section.</p>
                 <p>
@@ -114,9 +113,26 @@ const getImageOfTheDay = (state) => {
 
 const getManifest = (state) => {
     let { manifest } = state;
+    let roverName = 'curiosity'
     console.log('getManifest function');
 
-    fetch(`http://localhost:3000/manifest`)
+    fetch(`http://localhost:3000/manifest?roverName=${roverName}`)
         .then(res => res.json())
         .then(manifest => updateStore(store, { manifest }))
+}
+
+const getLatestImages = (state) => {
+    let { latestImg } = state;
+    console.log('getLatestImages function');
+
+    fetch(`http://localhost:3000/latestImg`)
+        .then(res => res.json())
+        .then(latestImg => updateStore(store, { latestImg }))
+}
+
+const loadRoverData = (button) => {
+    console.log('button clicked');
+    let roverName = button.innerText.toLowerCase();
+    console.log(roverName);
+    getManifest(store);
 }

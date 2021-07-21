@@ -3,6 +3,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const fetch = require('node-fetch')
 const path = require('path')
+const { runInNewContext } = require('vm')
 
 const app = express()
 const port = 3000
@@ -27,7 +28,9 @@ app.get('/apod', async (req, res) => {
 
 app.get('/manifest', async (req, res) => {
     try {
-        let manifest = await fetch(`https://api.nasa.gov/mars-photos/api/v1/manifests/Curiosity?api_key=${process.env.API_KEY}`)
+        console.log('@@@', req.query, req.params);
+        let roverName = req.query.roverName.toLowerCase();
+        let manifest = await fetch(`https://api.nasa.gov/mars-photos/api/v1/manifests/${roverName}?api_key=${process.env.API_KEY}`)
             .then(res => res.json())
         res.send({ manifest })        
     } catch (err) {
@@ -37,6 +40,7 @@ app.get('/manifest', async (req, res) => {
 
 app.get('/latestImg', async (req, res) => {
     try {
+        
         let latestImg = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=${process.env.API_KEY}`)
             .then(res => res.json())
         res.send ({ latestImg })        
