@@ -1,3 +1,5 @@
+//const { default: fetch } = require("node-fetch");
+
 let store = Immutable.Map({
     user: { name: "Student" },
     currentRover: '',
@@ -106,33 +108,25 @@ const getImageOfTheDay = (state) => {
     fetch(`http://localhost:3000/apod`)
         .then(res => res.json())
         .then(apod => updateStore(store, { apod }))
-        .catch(err => console.error('@@@', err))
-        
+                
     return apod;
 }
 
-const getManifest = (state) => {
-    let { manifest } = state;
-    let roverName = 'curiosity'
-    console.log('getManifest function');
-
-    fetch(`http://localhost:3000/manifest?roverName=${roverName}`)
-        .then(res => res.json())
-        .then(manifest => updateStore(store, { manifest }))
-}
-
-const getLatestImages = (state) => {
-    let { latestImg } = state;
-    console.log('getLatestImages function');
-
-    fetch(`http://localhost:3000/latestImg`)
-        .then(res => res.json())
-        .then(latestImg => updateStore(store, { latestImg }))
-}
 
 const loadRoverData = (button) => {
     console.log('button clicked');
     let roverName = button.innerText.toLowerCase();
-    console.log(roverName);
-    getManifest(store);
+    console.log(roverName);    
+    let { manifest } = store;        
+
+    fetch(`http://localhost:3000/manifest?roverName=${roverName}`)
+        .then(res => res.json())
+        .then(manifest => updateStore(store, { manifest }))
+
+    let { latestImg } = store;
+    console.log('getLatestImages function');
+
+    fetch(`http://localhost:3000/latestImg?roverName=${roverName}`)
+        .then(res => res.json())
+        .then(latestImg => updateStore(store, { latestImg }))
 }
