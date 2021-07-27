@@ -38,6 +38,7 @@ const App = (state) => {
                     <button type="button" onClick=loadRoverData(this)>${store.getIn(['rovers'])[1]}</button>
                     <button type="button" onClick=loadRoverData(this)>${store.getIn(['rovers'])[2]}</button>
                 </div>
+                <header>${renderRoverData(state.get("manifest"))}</header>
                 <p>Here is an example section.</p>
                 <p>
                     One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
@@ -118,27 +119,27 @@ const loadRoverData = (button) => {
     console.log('button clicked');
     let roverName = button.innerText.toLowerCase();
     console.log(roverName);    
-    let { manifest } = store;  
+    let { manifest } = store;
     
-    //let { maxDate } = store.get("manifest.photo_manifest.max_date"); 
     let currentRover = roverName;     
+    updateStore(store, { currentRover })
+    let { latestImg } = store;
 
     fetch(`http://localhost:3000/manifest?roverName=${roverName}`)
         .then(res => res.json())
-        .then(manifest => updateStore(store, { manifest }))
-        //.then(maxDate => updateStore(store, { maxDate }))
-        .then(roverName => updateStore(store, { currentRover }))
-
-    let  maxDate = store.get("manifest.photo_manifest.max_date");
-    let { latestImg } = store;
+        .then(manifest => {
+            updateStore(store, { manifest });
+            //const manifest2 = store.get('manifest');
+            const {manifest: {photo_manifest: {max_date}}} = manifest;         
+            fetch(`http://localhost:3000/latestImg?roverName=${roverName}&maxDate=${max_date}`)
+                .then(res => res.json())
+                .then(latestImg => updateStore(store, { latestImg }))                
+        });    
     
     console.log('loadRoverData function');
-    console.log(`maxDate is ${maxDate}`);
+    //console.log(`maxDate is ${maxDate}`);
 
-    fetch(`http://localhost:3000/latestImg?roverName=${roverName}?maxDate=${maxDate}`)
-        .then(res => res.json())
-        .then(latestImg => updateStore(store, { latestImg }))
-        .then(maxDate => updateStore(store, { maxDate }))
+    
 
     console.log(`@@@ ${store}`)    
 }
@@ -146,9 +147,25 @@ const loadRoverData = (button) => {
 
 const renderRoverData = (manifest) => {
     if(!manifest || manifest === ''){
-        loadRoverData(store);
+        //loadRoverData(store);
     } else {
-        //const 
+        const roverName = store.get("currentRover");
+        const launchDate = store.get("manifest.photo_manifest.launch_date");
+        const landingDate = store.get("manifest.photo_manifest.landing_date");
+        const status = store.get("manifest.photo_manifest.status");
+        const maxDate = store.get("manifest.photo_manifest.max_date");
+
+        return `
+            <p>Rover Name: ${roverName}</p>
+            <p>Launch Date: ${launchDate}</p>
+            <p>Landing Date: ${landingDate}</p>
+            <p>Status: ${status}</p>
+            <p>Date Of Most Recent Photos Were Taken: ${maxDate}</p>
+        ` 
+
+        /*return `
+            <h1>Welcome, ${name}!</h1>
+        `*/
     }
 }
 
