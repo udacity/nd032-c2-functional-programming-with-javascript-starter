@@ -10,7 +10,9 @@ body {
 }
 
 header {
-  /* header styles */
+  font-family: Arial;
+  color: #FAEBD7;
+  text-align: center;
 }
 
 main {

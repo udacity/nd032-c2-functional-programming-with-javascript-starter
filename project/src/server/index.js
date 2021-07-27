@@ -41,7 +41,8 @@ app.get('/manifest', async (req, res) => {
 app.get('/latestImg', async (req, res) => {
     try {
         let roverName = req.query.roverName.toLowerCase();
-        let latestImg = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/${roverName}/photos?earth_date=2010-03-21&api_key=${process.env.API_KEY}`)
+        let maxDate = req.query.maxDate;
+        let latestImg = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/${roverName}/photos?earth_date=${maxDate}&api_key=${process.env.API_KEY}`)
             .then(res => res.json())
         res.send ({ latestImg })        
     } catch (err) {

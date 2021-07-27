@@ -1,4 +1,4 @@
-//const { default: fetch } = require("node-fetch");
+//const { load } = require("dotenv");
 
 let store = Immutable.Map({
     user: { name: "Student" },
@@ -6,6 +6,7 @@ let store = Immutable.Map({
     apod: '',
     manifest: '',
     latestImg: '',
+    maxDate: '',
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
 })
 
@@ -15,6 +16,7 @@ const root = document.getElementById('root')
 const updateStore = (newStore, newState) => {    
     store = newStore.merge(Immutable.Map(newState));
     render(root, store)
+    console.log(`updated ${store}`)
 }
 
 const render = async (root, state) => {
@@ -80,9 +82,9 @@ const ImageOfTheDay = (apod) => {
         getImageOfTheDay(store);
     } else {
         const photodate = new Date(apod.date);
-        console.log(photodate.getDate(), today.getDate());
+        //console.log(photodate.getDate(), today.getDate());
 
-        console.log(photodate.getDate() === today.getDate());
+        //console.log(photodate.getDate() === today.getDate());
         // check if the photo of the day is actually type video!
         if (apod.image.media_type === "video") {
             return (`
@@ -112,21 +114,42 @@ const getImageOfTheDay = (state) => {
     return apod;
 }
 
-
 const loadRoverData = (button) => {
     console.log('button clicked');
     let roverName = button.innerText.toLowerCase();
     console.log(roverName);    
-    let { manifest } = store;        
+    let { manifest } = store;  
+    
+    //let { maxDate } = store.get("manifest.photo_manifest.max_date"); 
+    let currentRover = roverName;     
 
     fetch(`http://localhost:3000/manifest?roverName=${roverName}`)
         .then(res => res.json())
         .then(manifest => updateStore(store, { manifest }))
+        //.then(maxDate => updateStore(store, { maxDate }))
+        .then(roverName => updateStore(store, { currentRover }))
 
+    let  maxDate = store.get("manifest.photo_manifest.max_date");
     let { latestImg } = store;
-    console.log('getLatestImages function');
+    
+    console.log('loadRoverData function');
+    console.log(`maxDate is ${maxDate}`);
 
-    fetch(`http://localhost:3000/latestImg?roverName=${roverName}`)
+    fetch(`http://localhost:3000/latestImg?roverName=${roverName}?maxDate=${maxDate}`)
         .then(res => res.json())
         .then(latestImg => updateStore(store, { latestImg }))
+        .then(maxDate => updateStore(store, { maxDate }))
+
+    console.log(`@@@ ${store}`)    
 }
+
+
+const renderRoverData = (manifest) => {
+    if(!manifest || manifest === ''){
+        loadRoverData(store);
+    } else {
+        //const 
+    }
+}
+
+
