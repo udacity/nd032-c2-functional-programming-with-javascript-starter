@@ -5,8 +5,7 @@ let store = Immutable.Map({
     currentRover: '',
     apod: '',
     manifest: '',
-    latestImg: '',
-    maxDate: '',
+    latestImg: '',    
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
 })
 
@@ -16,7 +15,7 @@ const root = document.getElementById('root')
 const updateStore = (newStore, newState) => {    
     store = newStore.merge(Immutable.Map(newState));
     render(root, store)
-    console.log(`updated ${store}`)
+    //console.log(`updated ${store}`)
 }
 
 const render = async (root, state) => {
@@ -38,7 +37,7 @@ const App = (state) => {
                     <button type="button" onClick=loadRoverData(this)>${store.getIn(['rovers'])[1]}</button>
                     <button type="button" onClick=loadRoverData(this)>${store.getIn(['rovers'])[2]}</button>
                 </div>
-                <header>${renderRoverData(state.get("manifest"))}</header>
+                
                 <p>Here is an example section.</p>
                 <p>
                     One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
@@ -133,40 +132,34 @@ const loadRoverData = (button) => {
             const {manifest: {photo_manifest: {max_date}}} = manifest;         
             fetch(`http://localhost:3000/latestImg?roverName=${roverName}&maxDate=${max_date}`)
                 .then(res => res.json())
-                .then(latestImg => updateStore(store, { latestImg }))                
-        });    
-    
-    console.log('loadRoverData function');
-    //console.log(`maxDate is ${maxDate}`);
-
-    
-
-    console.log(`@@@ ${store}`)    
+                .then(latestImg => updateStore(store, { latestImg }))    
+                .then(manifest => {renderRoverData(store.get("manifest"))});            
+        });   
 }
 
 
 const renderRoverData = (manifest) => {
-    if(!manifest || manifest === ''){
-        //loadRoverData(store);
-    } else {
-        const roverName = store.get("currentRover");
-        const launchDate = store.get("manifest.photo_manifest.launch_date");
-        const landingDate = store.get("manifest.photo_manifest.landing_date");
-        const status = store.get("manifest.photo_manifest.status");
-        const maxDate = store.get("manifest.photo_manifest.max_date");
+    const roverName = store.get("currentRover");
+    const {manifest: {photo_manifest: {launch_date}}} = manifest;         
+    const {manifest: {photo_manifest: {landing_date}}} = manifest;
+    const {manifest: {photo_manifest: {status}}} = manifest;
+    const {manifest: {photo_manifest: {max_date}}} = manifest;
 
+    //document.getElementById("header").appendChild(document.getElementById("roverData"));
         return `
+        <header>
             <p>Rover Name: ${roverName}</p>
-            <p>Launch Date: ${launchDate}</p>
-            <p>Landing Date: ${landingDate}</p>
+            <p>Launch Date: ${launch_date}</p>
+            <p>Landing Date: ${landing_date}</p>
             <p>Status: ${status}</p>
-            <p>Date Of Most Recent Photos Were Taken: ${maxDate}</p>
+            <p>Date Of Most Recent Photos Were Taken: ${max_date}</p>
+        </header>        
         ` 
-
+    
         /*return `
             <h1>Welcome, ${name}!</h1>
         `*/
-    }
+    
 }
 
 
