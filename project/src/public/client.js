@@ -68,7 +68,7 @@ const loadRoverData = (button) => {
         });
 }
 
-// add rover data to the DOM
+// add rover data to the DOM. This is second higher-order function
 const renderRoverData = (manifest, getLatestPhotos) => {
     if (!manifest || manifest === '')
     {
@@ -85,7 +85,7 @@ const renderRoverData = (manifest, getLatestPhotos) => {
             <p>Launch Date: ${launch_date}</p>
             <p>Landing Date: ${landing_date}</p>
             <p>Status: ${status}</p>
-            <p>Date Of Most Recent Photos Were Taken: ${max_date}</p>
+            <p>Date The Most Recent Photos Were Taken: ${max_date}</p>
         </div>
         ${getLatestPhotos(store.get("latestImg"))}
         `
