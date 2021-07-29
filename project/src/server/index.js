@@ -13,22 +13,10 @@ app.use(bodyParser.json())
 
 app.use('/', express.static(path.join(__dirname, '../public')))
 
-// example API call
-app.get('/apod', async (req, res) => {
-    try {
-        let image = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`)
-            .then(res => res.json())
-        res.send({ image })
-    } catch (err) {
-        console.log('error:', err);
-    }
-})
-
-// your API calls
+// API calls
 
 app.get('/manifest', async (req, res) => {
-    try {
-        console.log('@@@', req.query, req.params);
+    try {        
         let roverName = req.query.roverName.toLowerCase();
         let manifest = await fetch(`https://api.nasa.gov/mars-photos/api/v1/manifests/${roverName}?api_key=${process.env.API_KEY}`)
             .then(res => res.json())
