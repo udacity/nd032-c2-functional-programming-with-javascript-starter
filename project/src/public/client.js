@@ -37,7 +37,7 @@ const App = (state) => {
                     <button type="button" onClick=loadRoverData(this)>${store.getIn(['rovers'])[1]}</button>
                     <button type="button" onClick=loadRoverData(this)>${store.getIn(['rovers'])[2]}</button>
                 </div>
-                
+                ${renderRoverData(store.get("manifest"))}
                 <p>Here is an example section.</p>
                 <p>
                     One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
@@ -133,33 +133,51 @@ const loadRoverData = (button) => {
             fetch(`http://localhost:3000/latestImg?roverName=${roverName}&maxDate=${max_date}`)
                 .then(res => res.json())
                 .then(latestImg => updateStore(store, { latestImg }))    
-                .then(manifest => {renderRoverData(store.get("manifest"))});            
+                //.then(manifest => {renderRoverData(store.get("manifest"))});            
         });   
 }
 
 
 const renderRoverData = (manifest) => {
-    const roverName = store.get("currentRover");
-    const {manifest: {photo_manifest: {launch_date}}} = manifest;         
-    const {manifest: {photo_manifest: {landing_date}}} = manifest;
-    const {manifest: {photo_manifest: {status}}} = manifest;
-    const {manifest: {photo_manifest: {max_date}}} = manifest;
-
-    //document.getElementById("header").appendChild(document.getElementById("roverData"));
+    if (!manifest || manifest === '')
+    {
         return `
-        <header>
+            <h3>Please select Mars rover</h3>
+        `
+    } else {
+    const roverName = store.get("currentRover");
+    const {manifest: {photo_manifest: {launch_date, landing_date, status, max_date}}} = manifest;             
+
+    return `
+        <div>
             <p>Rover Name: ${roverName}</p>
             <p>Launch Date: ${launch_date}</p>
             <p>Landing Date: ${landing_date}</p>
             <p>Status: ${status}</p>
             <p>Date Of Most Recent Photos Were Taken: ${max_date}</p>
-        </header>        
-        ` 
-    
-        /*return `
-            <h1>Welcome, ${name}!</h1>
-        `*/
-    
+        </div>   
+        ${getLatestPhotos(store.get("latestImg"))}       
+        `
+    }        
+}
+
+const getLatestPhotos = (latestImg) => {
+    if (!latestImg || latestImg === '') {
+        return `
+            <h4>Loading rover photos...</h4>
+        `
+    } else {
+        const {latestImg: {photos}} = latestImg;
+        const images = photos.map(({ img_src }, index, array) => {
+            console.log(array[index].img_src);
+            console.log(img_src);
+            return `
+                <img src="${ img_src }" height="150px" width="150px">
+            `
+        });  
+        const imageContainer = `<div>${ images }</div>`;
+        return imageContainer;      
+    }
 }
 
 
