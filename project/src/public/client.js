@@ -17,10 +17,10 @@ const render = async (root, state) => {
     root.innerHTML = App(state, renderRoverData)
 }
 
-// create content
+// create content. This is also first higher-order function
 const App = (state, renderRoverData) => {
     let { rovers, apod } = state;
-    
+    // Add buttons to select Mars rovers. Also call the function that will get rover data
     return `
         <header></header>
         <main>
@@ -46,6 +46,7 @@ window.addEventListener('load', () => {
 // ------------------------------------------------------  API CALLS
 
 const loadRoverData = (button) => {
+    // get the selected rover name from the button clicked by user
     let roverName = button.innerText.toLowerCase();
     let { manifest } = store;
     
@@ -53,11 +54,13 @@ const loadRoverData = (button) => {
     updateStore(store, { currentRover })
     let { latestImg } = store;
 
+    // first API call to get the rover data such as launch data, landing data, status and data where last photos where taken
     fetch(`http://localhost:3000/manifest?roverName=${roverName}`)
         .then(res => res.json())
         .then(manifest => {
             updateStore(store, { manifest });
 
+            //second API call to get rover photos urls with max_data (taken from previous API call)
             const {manifest: {photo_manifest: {max_date}}} = manifest;
             fetch(`http://localhost:3000/latestImg?roverName=${roverName}&maxDate=${max_date}`)
                 .then(res => res.json())
@@ -65,6 +68,7 @@ const loadRoverData = (button) => {
         });
 }
 
+// add rover data to the DOM
 const renderRoverData = (manifest, getLatestPhotos) => {
     if (!manifest || manifest === '')
     {
@@ -88,6 +92,7 @@ const renderRoverData = (manifest, getLatestPhotos) => {
     }
 }
 
+// add latest photos to the DOM
 const getLatestPhotos = (latestImg) => {
     if (!latestImg || latestImg === '') {
         return `
