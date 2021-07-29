@@ -1,29 +1,29 @@
-let store = Immutable.Map({    
-    currentRover: '',    
+let store = Immutable.Map({
+    currentRover: '',
     manifest: '',
-    latestImg: '',    
+    latestImg: '', 
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
 })
 
 // add our markup to the page
 const root = document.getElementById('root')
 
-const updateStore = (newStore, newState) => {    
+const updateStore = (newStore, newState) => {
     store = newStore.merge(Immutable.Map(newState));
-    render(root, store)    
+    render(root, store)
 }
 
 const render = async (root, state) => {
-    root.innerHTML = App(state)
+    root.innerHTML = App(state, renderRoverData)
 }
 
 // create content
-const App = (state) => {
+const App = (state, renderRoverData) => {
     let { rovers, apod } = state;
     
     return `
         <header></header>
-        <main>            
+        <main>
             <section>
                 <h2>NASA Mars rovers</h2>
                 <div>
@@ -31,7 +31,7 @@ const App = (state) => {
                     <button type="button" onClick=loadRoverData(this)>${store.getIn(['rovers'])[1]}</button>
                     <button type="button" onClick=loadRoverData(this)>${store.getIn(['rovers'])[2]}</button>
                 </div>
-                ${renderRoverData(store.get("manifest"))}                
+                ${renderRoverData(store.get("manifest"), getLatestPhotos)}
             </section>
         </main>
         <footer></footer>
@@ -45,8 +45,8 @@ window.addEventListener('load', () => {
 
 // ------------------------------------------------------  API CALLS
 
-const loadRoverData = (button) => {   
-    let roverName = button.innerText.toLowerCase();    
+const loadRoverData = (button) => {
+    let roverName = button.innerText.toLowerCase();
     let { manifest } = store;
     
     let currentRover = roverName;
@@ -61,11 +61,11 @@ const loadRoverData = (button) => {
             const {manifest: {photo_manifest: {max_date}}} = manifest;
             fetch(`http://localhost:3000/latestImg?roverName=${roverName}&maxDate=${max_date}`)
                 .then(res => res.json())
-                .then(latestImg => updateStore(store, { latestImg }))            
+                .then(latestImg => updateStore(store, { latestImg }))
         });
 }
 
-const renderRoverData = (manifest) => {
+const renderRoverData = (manifest, getLatestPhotos) => {
     if (!manifest || manifest === '')
     {
         return `
@@ -73,7 +73,7 @@ const renderRoverData = (manifest) => {
         `
     } else {
     const roverName = store.get("currentRover");
-    const {manifest: {photo_manifest: {launch_date, landing_date, status, max_date}}} = manifest;             
+    const {manifest: {photo_manifest: {launch_date, landing_date, status, max_date}}} = manifest;
 
     return `
         <div>
@@ -82,10 +82,10 @@ const renderRoverData = (manifest) => {
             <p>Landing Date: ${landing_date}</p>
             <p>Status: ${status}</p>
             <p>Date Of Most Recent Photos Were Taken: ${max_date}</p>
-        </div>   
-        ${getLatestPhotos(store.get("latestImg"))}       
+        </div>
+        ${getLatestPhotos(store.get("latestImg"))}
         `
-    }        
+    }
 }
 
 const getLatestPhotos = (latestImg) => {
@@ -95,14 +95,12 @@ const getLatestPhotos = (latestImg) => {
         `
     } else {
         const {latestImg: {photos}} = latestImg;
-        const images = photos.map(({ img_src }, index, array) => {                        
+        const images = photos.map(({ img_src }) => {
             return `
                 <img src="${ img_src }" height="150px" width="150px">
             `
-        });  
+        });
         const imageContainer = `<div>${ images }</div>`;
-        return imageContainer;      
+        return imageContainer;
     }
 }
-
-
