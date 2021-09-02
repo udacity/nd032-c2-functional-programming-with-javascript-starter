@@ -6,6 +6,9 @@ const path = require('path')
 
 const app = express()
 const port = 3000
+const nasaApiBaseUrl = `https://api.nasa.gov`;
+const manifestsUri = `/mars-photos/api/v1/manifests/`;
+
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -14,7 +17,19 @@ app.use('/', express.static(path.join(__dirname, '../public')))
 
 // your API calls
 
-// example API call
+
+app.get('/manifests/:rover_name', async (req, res) => {
+    try {
+        let manifest_data = await fetch(`${nasaApiBaseUrl}${manifestsUri}/${req.params.rover_name}?api_key=${process.env.API_KEY}`)
+            .then(res => res.json())
+            .then(data => data['photo_manifest']);
+        res.send({manifest_data});
+    }
+    catch (err) {
+        console.error("error: ", err);
+    }
+})
+
 app.get('/apod', async (req, res) => {
     try {
         let image = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`)
