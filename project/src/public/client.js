@@ -1,6 +1,8 @@
+
 let store = {
     baseUrl: 'http://localhost:3000',
-    user: { name: "Student" },
+    imageAssetsPath: '/assets/images',
+    app: { title: "Mars Rover Exploration" },
     rover_manifest_details: undefined,
 }
 
@@ -33,7 +35,6 @@ const getMarsRovers = async (state) => {
 
 const render = async (root, state) => {
     root.innerHTML = await App(state)
-    console.log(root.innerHTML);
 }
 
 
@@ -42,11 +43,10 @@ const App = async (state) => {
     let rovers = await getMarsRovers(state);
 
     return `
-        <header>Mars Rovers</header>
+        <header>${Greeting(store.app.title)}</header>
         <main>
-            ${Greeting(store.user.name)}
             <section>
-                ${await RenderNasaRovers(rovers)}
+                ${await RenderNasaRovers(state, rovers)}
             </section>
         </main>
         <footer></footer>
@@ -58,10 +58,10 @@ window.addEventListener('load', () => {
     render(root, store)
 })
 
-const Greeting = (name) => {
-    if (name) {
+const Greeting = (title) => {
+    if (title) {
         return `
-            <h1>Welcome, ${name}!</h1>
+            Welcome to ${title}!
         `
     }
 
@@ -70,16 +70,23 @@ const Greeting = (name) => {
     `
 }
 
-const RenderNasaRovers = (rovers) => {
+const RenderNasaRovers = (state, rovers) => {
     return rovers.map(rover => {
-        return RenderRoverCard(rover)
+        return RenderRoverCard(state, rover)
     }).reduce((initialItem, currentItem) => `${initialItem} ${currentItem}`);
 }
 
-const RenderRoverCard = (rover) => {
+const RenderRoverCard = (state, rover) => {
     return (`
-        <div class='rover-card'>
-            <h2 class="rover-title">${rover.name}</h2>
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src='${state.imageAssetsPath}/${rover.name.toLowerCase()}_card_image.jpg' alt="${rover.name} image">
+            <div class="card-body">
+                <h5 class="card-title">${rover.name}</h5>
+                <p class="card-text">
+                    Random Text
+                </p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
         </div>
     `)
 }
@@ -117,7 +124,6 @@ const ImageOfTheDay = (apod) => {
 }
 
 // API Calls
-
 const getRoverManifest = async (rover_name) => {
     let roverManifestData = await fetch(`${store.baseUrl}/manifests/${rover_name}`)
         .then(res => res.json())
@@ -125,10 +131,7 @@ const getRoverManifest = async (rover_name) => {
     return roverManifestData;
 }
 
-
-// Example API call
 const getImageOfTheDay = (state) => {
-    let { apod } = state
 
     fetch(`http://localhost:3000/apod`)
         .then(res => res.json())
