@@ -1,8 +1,10 @@
 let store = {
+    baseUrl: 'http://localhost:3000',
     user: { name: "Student" },
-    apod: '',
-    rovers: ['Curiosity', 'Opportunity', 'Spirit'],
+    rover_manifest_details: undefined,
 }
+
+const roverNames = ["Curiosity", "Opportunity", "Spirit"];
 
 // add our markup to the page
 const root = document.getElementById('root')
@@ -12,31 +14,39 @@ const updateStore = (store, newState) => {
     render(root, store)
 }
 
+const updateRovers = (store, newRoverState) => {
+    store = {...store, newRoverState};
+}
+
+const getMarsRovers = async (state) => {
+    let rover_manifest_details = state.rover_manifest_details ?? JSON.parse(localStorage.getItem("rover_manifest_details")) ?? [];
+
+    if (!rover_manifest_details || rover_manifest_details.length == 0) {
+        rover_manifest_details = (await Promise.all(roverNames.map(roverName => getRoverManifest(roverName)))).map(data => data.manifest_data);
+
+        localStorage.setItem("rover_manifest_details", JSON.stringify(rover_manifest_details));
+        updateRovers(state, rover_manifest_details);
+    }
+
+    return rover_manifest_details;
+}
+
 const render = async (root, state) => {
-    root.innerHTML = App(state)
+    root.innerHTML = await App(state)
+    console.log(root.innerHTML);
 }
 
 
 // create content
-const App = (state) => {
-    let { rovers, apod } = state
+const App = async (state) => {
+    let rovers = await getMarsRovers(state);
 
     return `
-        <header></header>
+        <header>Mars Rovers</header>
         <main>
             ${Greeting(store.user.name)}
             <section>
-                <h3>Put things on the page!</h3>
-                <p>Here is an example section.</p>
-                <p>
-                    One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
-                    the most popular websites across all federal agencies. It has the popular appeal of a Justin Bieber video.
-                    This endpoint structures the APOD imagery and associated metadata so that it can be repurposed for other
-                    applications. In addition, if the concept_tags parameter is set to True, then keywords derived from the image
-                    explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
-                    but generally help with discoverability of relevant imagery.
-                </p>
-                ${ImageOfTheDay(apod)}
+                ${await RenderNasaRovers(rovers)}
             </section>
         </main>
         <footer></footer>
@@ -48,9 +58,6 @@ window.addEventListener('load', () => {
     render(root, store)
 })
 
-// ------------------------------------------------------  COMPONENTS
-
-// Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
 const Greeting = (name) => {
     if (name) {
         return `
@@ -61,6 +68,24 @@ const Greeting = (name) => {
     return `
         <h1>Hello!</h1>
     `
+}
+
+const RenderNasaRovers = (rovers) => {
+    return rovers.map(rover => {
+        return RenderRoverCard(rover)
+    }).reduce((initialItem, currentItem) => `${initialItem} ${currentItem}`);
+}
+
+const RenderRoverCard = (rover) => {
+    return (`
+        <div class='rover-card'>
+            <h2 class="rover-title">${rover.name}</h2>
+        </div>
+    `)
+}
+
+const RenderGallery = () => {
+
 }
 
 // Example of a pure function that renders infomation requested from the backend
@@ -91,7 +116,15 @@ const ImageOfTheDay = (apod) => {
     }
 }
 
-// ------------------------------------------------------  API CALLS
+// API Calls
+
+const getRoverManifest = async (rover_name) => {
+    let roverManifestData = await fetch(`${store.baseUrl}/manifests/${rover_name}`)
+        .then(res => res.json())
+
+    return roverManifestData;
+}
+
 
 // Example API call
 const getImageOfTheDay = (state) => {
@@ -100,6 +133,4 @@ const getImageOfTheDay = (state) => {
     fetch(`http://localhost:3000/apod`)
         .then(res => res.json())
         .then(apod => updateStore(store, { apod }))
-
-    return data
 }
