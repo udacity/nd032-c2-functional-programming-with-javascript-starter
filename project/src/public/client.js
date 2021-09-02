@@ -17,7 +17,7 @@ const updateStore = (store, newState) => {
 }
 
 const updateRovers = (store, newRoverState) => {
-    store = {...store, newRoverState};
+    store = Object.assign(store, {rover_manifest_details: newRoverState});
 }
 
 const getMarsRovers = async (state) => {
@@ -27,14 +27,15 @@ const getMarsRovers = async (state) => {
         rover_manifest_details = (await Promise.all(roverNames.map(roverName => getRoverManifest(roverName)))).map(data => data.manifest_data);
 
         localStorage.setItem("rover_manifest_details", JSON.stringify(rover_manifest_details));
-        updateRovers(state, rover_manifest_details);
     }
-
+    
+    updateRovers(state, rover_manifest_details);
     return rover_manifest_details;
 }
 
 const render = async (root, state) => {
     root.innerHTML = await App(state)
+    setButtonClickEventListeners(state)
 }
 
 
@@ -45,8 +46,12 @@ const App = async (state) => {
     return `
         <header>${Greeting(store.app.title)}</header>
         <main>
-            <section>
-                ${await RenderNasaRovers(state, rovers)}
+            <section class='rover-cards'>
+                ${RenderNasaRovers(state, rovers)}
+            </section>
+
+            <section id='gallery' class='rover-gallery'>
+                ${RenderGallery()}
             </section>
         </main>
         <footer></footer>
@@ -85,14 +90,45 @@ const RenderRoverCard = (state, rover) => {
                 <p class="card-text">
                     Random Text
                 </p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+                <button type="button" id="btn-${rover.name}" class="btn btn-primary">View More Information</button>
             </div>
         </div>
     `)
 }
 
 const RenderGallery = () => {
+    return `(
+        <div id="roverGalleryControls" class="carousel slide hide" data-ride="carousel">
+            <div class="carousel-inner"></div>
+            <a class="carousel-control-prev" href="#roverGalleryControls" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#roverGalleryControls" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    )`
+}
 
+const setButtonClickEventListeners = (state) => {
+    const rovers = state.rover_manifest_details
+    rovers.forEach(rover => {
+        document.getElementById(`btn-${rover.name}`).addEventListener('click', function() {
+            let element = document.querySelector('#roverGalleryControls');
+            element.classList.remove('hide');
+            element.firstChild.innerHTML = RenderRoverSlide(rover);
+        });
+    });
+}
+
+const RenderRoverSlide = (rover, index) => {
+    return `(
+        <div class="carousel-item ${index == 1 ? 'active' : ''}">
+            <img class="d-block w-100" src="" alt="${rover.name} slide">
+        </div>
+    )`
 }
 
 // Example of a pure function that renders infomation requested from the backend
