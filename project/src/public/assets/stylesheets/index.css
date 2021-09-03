@@ -11,6 +11,17 @@ header {
   /* header styles */
 }
 
+.rover-cards {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.rover-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
 main {
   flex: 1;
   padding: 20px;
