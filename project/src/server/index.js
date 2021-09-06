@@ -7,9 +7,8 @@ const path = require('path')
 const app = express()
 const port = 3000
 
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
-
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use('/', express.static(path.join(__dirname, '../public')))
 
 // your API calls
@@ -24,5 +23,6 @@ app.get('/apod', async (req, res) => {
         console.log('error:', err);
     }
 })
+
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
