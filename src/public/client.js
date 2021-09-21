@@ -29,7 +29,7 @@ const navMenu = () => {
     navArray()
       .map((element) => {
         return `
-        <div class = rover>
+        <div class="rover">
           <button type="button" id="${element.toLowerCase()}" href=${element} onclick="roverButton(${element.toLowerCase()})">
             <img id='${element.toLowerCase()}-img'>
               <h2>${element}</h2>
@@ -54,11 +54,12 @@ const App = (state) => {
   let { rovers, apod } = state;
 
   return `
-        <header></header>
+        <header>
+          <nav class="rover-nav">
+            ${navMenu()}
+          </nav>
+        </header>
         <main>
-        <nav class="rover-nav">
-          ${navMenu()}
-        </nav>
             ${Greeting(store.get("user.name"))}
             <section>
                 <h3>Put things on the page!</h3>

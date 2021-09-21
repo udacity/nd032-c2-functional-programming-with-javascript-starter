@@ -11,6 +11,15 @@ header {
   /* header styles */
 }
 
+.rover-nav {
+  display: flex;
+  justify-content: center;
+}
+
+.rover {
+  margin: 0 3px;
+}
+
 main {
   flex: 1;
   padding: 20px;
