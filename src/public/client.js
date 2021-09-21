@@ -47,6 +47,7 @@ const navMenu = () => {
 function roverButton(button) {
   const selectedRover = button.id;
   console.log(`Clicked ${selectedRover}`);
+  getRoverData(selectedRover, true);
 }
 
 // create content
@@ -61,6 +62,11 @@ const App = (state) => {
         </header>
         <main>
             ${Greeting(store.get("user.name"))}
+            <div id="content" style="display:none">
+              <div id="roverPhotos">
+                ${getRoverImage(state)}
+              </div>
+            </div>
             <section>
                 <h3>Put things on the page!</h3>
                 <p>Here is an example section.</p>
@@ -82,6 +88,10 @@ const App = (state) => {
 // listening for load event because page should load before any JS is called
 window.addEventListener("load", () => {
   render(root, store);
+  // listening for load event because page should load before any JS is called
+  getRoverData("Spirit");
+  getRoverData("Opportunity");
+  getRoverData("Curiosity");
 });
 
 // ------------------------------------------------------  COMPONENTS
@@ -93,6 +103,23 @@ const Greeting = (name) => {
   }
 
   return `<h1>Hello!</h1>`;
+};
+
+//get up to 4 rover images(Higher Order function)
+const getRoverImage = (state) => {
+  const roverData = () => state.latest_photos;
+  const roverDataSlice = roverData().slice(0, 4);
+  return roverDataSlice
+    .map((e) => {
+      return `
+          <div id='img-container'>
+              <img src="${
+                e.img_src
+              }" id="${e.rover.name.toLowerCase()}-img"></img>
+          </div>
+          `;
+    })
+    .join(" ");
 };
 
 // Example of a pure function that renders infomation requested from the backend
@@ -133,4 +160,17 @@ const getImageOfTheDay = (state) => {
     .then((apod) => updateStore(store, { apod }));
 
   return data;
+};
+
+const getRoverData = (roverName, show) => {
+  fetch(`http://localhost:3000/rover/${roverName.toLowerCase()}`)
+    .then((res) => res.json())
+    .then((roverData) => {
+      const latest_photos = roverData.latest_photos;
+      updateStore(store, { latest_photos });
+      render(root, store);
+      if (show) {
+        document.getElementById("content").style.display = "grid";
+      }
+    });
 };
