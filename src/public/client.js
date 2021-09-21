@@ -1,8 +1,12 @@
-let store = {
+// BEFLORE TODO: You should refactor so you can use this import instead of HTML Script of immutable
+// Immutable objects are called ‘maps’
+// import { Map } from "immutable";
+
+let store = Immutable.Map({
   user: { name: "Student" },
   apod: "",
   rovers: ["Curiosity", "Opportunity", "Spirit"]
-};
+});
 
 // add our markup to the page
 const root = document.getElementById("root");
@@ -16,6 +20,35 @@ const render = async (root, state) => {
   root.innerHTML = App(state);
 };
 
+// BEFLORE TODO: Remove/update comment below
+//dynamic navigation menu(Higher order function)
+const navMenu = () => {
+  const navArray = () => store.get("rovers");
+
+  return (
+    navArray()
+      .map((element) => {
+        return `
+        <div class = rover>
+          <button type="button" id="${element.toLowerCase()}" href=${element} onclick="roverButton(${element.toLowerCase()})">
+            <img id='${element.toLowerCase()}-img'>
+              <h2>${element}</h2>
+            </img>
+          </button>
+        </div>
+      `;
+      })
+      // BEFLORE TODO: Remove/update comment below
+      .join(" ")
+  ); //concatenating all of the elements in an array with space between and no coma
+};
+
+//button
+function roverButton(button) {
+  const selectedRover = button.id;
+  console.log(`Clicked ${selectedRover}`);
+}
+
 // create content
 const App = (state) => {
   let { rovers, apod } = state;
@@ -23,7 +56,10 @@ const App = (state) => {
   return `
         <header></header>
         <main>
-            ${Greeting(store.user.name)}
+        <nav class="rover-nav">
+          ${navMenu()}
+        </nav>
+            ${Greeting(store.get("user.name"))}
             <section>
                 <h3>Put things on the page!</h3>
                 <p>Here is an example section.</p>
@@ -52,21 +88,17 @@ window.addEventListener("load", () => {
 // Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
 const Greeting = (name) => {
   if (name) {
-    return `
-            <h1>Welcome, ${name}!</h1>
-        `;
+    return `<h1>Welcome, ${name}!</h1>`;
   }
 
-  return `
-        <h1>Hello!</h1>
-    `;
+  return `<h1>Hello!</h1>`;
 };
 
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {
   // If image does not already exist, or it is not from today -- request it again
   const today = new Date();
-  const photodate = new Date(apod.date);
+  const photodate = new Date(store.get("apod.date"));
   console.log(photodate.getDate(), today.getDate());
 
   console.log(photodate.getDate() === today.getDate());
