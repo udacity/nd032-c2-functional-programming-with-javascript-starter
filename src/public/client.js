@@ -39,8 +39,8 @@ const navMenu = () => {
       `;
       })
       // BEFLORE TODO: Remove/update comment below
-      .join(" ")
-  ); //concatenating all of the elements in an array with space between and no coma
+      .join("")
+  );
 };
 
 //button
