@@ -20,15 +20,12 @@ const render = async (root, state) => {
   root.innerHTML = App(state);
 };
 
-// BEFLORE TODO: Remove/update comment below
-//dynamic navigation menu(Higher order function)
 const navMenu = () => {
   const navArray = () => store.get("rovers");
 
-  return (
-    navArray()
-      .map((element) => {
-        return `
+  return navArray()
+    .map((element) => {
+      return `
         <div class="rover">
           <button type="button" id="${element.toLowerCase()}" href=${element} onclick="roverButton(${element.toLowerCase()})">
             <img id='${element.toLowerCase()}-img'>
@@ -37,10 +34,8 @@ const navMenu = () => {
           </button>
         </div>
       `;
-      })
-      // BEFLORE TODO: Remove/update comment below
-      .join("")
-  );
+    })
+    .join("");
 };
 
 //button
@@ -88,9 +83,7 @@ const App = (state) => {
 // listening for load event because page should load before any JS is called
 window.addEventListener("load", () => {
   render(root, store);
-  // listening for load event because page should load before any JS is called
-  getRoverData("Spirit");
-  getRoverData("Opportunity");
+
   getRoverData("Curiosity");
 });
 
