@@ -135,11 +135,11 @@ const ImageOfTheDay = (apod) => {
   }
 
   // check if the photo of the day is actually type video!
-  if (apod.media_type === "video") {
+  if (apod.image.media_type === "video") {
     return `
-            <p>See today's featured video <a href="${apod.url}">here</a></p>
-            <p>${apod.title}</p>
-            <p>${apod.explanation}</p>
+            <iframe width="560" height="315" src="${apod.image.url}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <p>${apod.image.title}</p>
+            <p>${apod.image.explanation}</p>
         `;
   } else {
     return `
