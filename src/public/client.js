@@ -5,7 +5,8 @@
 let store = Immutable.Map({
   user: { name: "Student" },
   apod: "",
-  rovers: ["Curiosity", "Opportunity", "Spirit"]
+  rovers: ["Curiosity", "Opportunity", "Spirit"],
+  selectedRover: ""
 });
 
 // add our markup to the page
@@ -56,14 +57,13 @@ const App = (state) => {
           </nav>
         </header>
         <main>
-            ${Greeting(store.get("user.name"))}
-            <div id="content" style="display:none">
-              <div id="roverPhotos">
-                ${getRoverImage(state)}
-              </div>
-            </div>
             <section>
-                <h3>Put things on the page!</h3>
+                <div id="content" style="display:none">
+                  ${renderData(state)}
+                  <div id="roverPhotos">
+                    ${getRoverImage(state)}
+                  </div>
+                </div>
                 <p>Here is an example section.</p>
                 <p>
                     One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
@@ -84,18 +84,22 @@ const App = (state) => {
 window.addEventListener("load", () => {
   render(root, store);
 
+  // BEFLORE TODO: Why exactly is this needed here?
+  // I think maybe there's some code in the HTML that breaks unless this is called.
+  // Which means, we may have a need for conditional HTML
   getRoverData("Curiosity");
 });
 
 // ------------------------------------------------------  COMPONENTS
 
-// Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
-const Greeting = (name) => {
-  if (name) {
-    return `<h1>Welcome, ${name}!</h1>`;
+// Pure function that renders conditional information.
+
+const renderData = (state) => {
+  if (state.selectedRover) {
+    return `<h3>${state.selectedRover}</h3>`;
   }
 
-  return `<h1>Hello!</h1>`;
+  return `<h1>PLACEHOLDER!</h1>`;
 };
 
 //get up to 4 rover images(Higher Order function)
@@ -151,8 +155,6 @@ const getImageOfTheDay = (state) => {
   fetch(`http://localhost:3000/apod`)
     .then((res) => res.json())
     .then((apod) => updateStore(store, { apod }));
-
-  return data;
 };
 
 const getRoverData = (roverName, show) => {
@@ -160,7 +162,7 @@ const getRoverData = (roverName, show) => {
     .then((res) => res.json())
     .then((roverData) => {
       const latest_photos = roverData.latest_photos;
-      updateStore(store, { latest_photos });
+      updateStore(store, { latest_photos, selectedRover: roverName });
       render(root, store);
       if (show) {
         document.getElementById("content").style.display = "grid";
