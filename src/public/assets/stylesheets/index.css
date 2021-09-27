@@ -42,10 +42,6 @@ main {
   align-items: center;
 }
 
-footer {
-  /* footer styles */
-}
-
 /* -------------------  TABLET  --------------------- */
 @media (min-width: 768px) {
   /* use mobile */
