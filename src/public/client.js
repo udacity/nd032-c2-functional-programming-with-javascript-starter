@@ -83,11 +83,6 @@ const App = (state) => {
 // listening for load event because page should load before any JS is called
 window.addEventListener("load", () => {
   render(root, store);
-
-  // BEFLORE TODO: Why exactly is this needed here?
-  // I think maybe there's some code in the HTML that breaks unless this is called.
-  // Which means, we may have a need for conditional HTML
-  getRoverData("Curiosity");
 });
 
 // ------------------------------------------------------  COMPONENTS
