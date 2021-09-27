@@ -104,8 +104,9 @@ const renderData = (state) => {
 
 //get latest rover image (Higher Order function)
 const getRoverImage = (state) => {
-  const roverData = () => state.latest_photos;
-  const roverDataSlice = roverData()[0] || undefined;
+  const roverData = () =>
+    state.latest_photos ? state.latest_photos[0] : undefined;
+  const roverDataSlice = roverData();
 
   return roverDataSlice
     ? `
@@ -130,18 +131,20 @@ const ImageOfTheDay = (apod) => {
     getImageOfTheDay(store);
   }
 
-  // check if the photo of the day is actually type video!
-  if (apod.image.media_type === "video") {
-    return `
-            <iframe width="560" height="315" src="${apod.image.url}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            <p>${apod.image.title}</p>
-            <p>${apod.image.explanation}</p>
-        `;
-  } else {
-    return `
-            <img src="${apod.image.url}" height="350px" width="100%" />
-            <p>${apod.image.explanation}</p>
-        `;
+  // check if the image is actually a video
+  if (apod && apod.image) {
+    if (apod.image.media_type === "video") {
+      return `
+              <iframe width="560" height="315" src="${apod.image.url}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              <p>${apod.image.title}</p>
+              <p>${apod.image.explanation}</p>
+          `;
+    } else {
+      return `
+              <img src="${apod.image.url}" height="350px" width="100%" />
+              <p>${apod.image.explanation}</p>
+          `;
+    }
   }
 };
 
