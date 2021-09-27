@@ -47,7 +47,7 @@ function roverButton(button) {
 
 // create content
 const App = (state) => {
-  let { rovers, apod } = state;
+  let { apod } = state;
 
   return `
     <header>
@@ -78,13 +78,12 @@ window.addEventListener("load", () => {
 // ------------------------------------------------------  COMPONENTS
 
 // Pure function that renders conditional information.
-
 const renderData = (state) => {
   if (state.latest_photos && state.latest_photos[0]) {
     const { name, launch_date, landing_date, status } =
       state.latest_photos[0].rover;
     return `
-      <h3>Name: ${name}</h3>
+      <h3>Rover Name: ${name}</h3>
       <div>Launching Date: ${launch_date}</div>
       <div>Landing Date: ${landing_date}</div>
       <div>Status: ${status}</div>
@@ -102,7 +101,7 @@ const getRoverImage = (state) => {
   return data
     ? `
     <div id='img-container'>
-      <img src="${data.img_src}" id="${data.rover.name}-img"></img>
+      <img src="${data.img_src}" id="${data.rover.name}-img" height="500px" width="500px"></img>
     </div>
     `
     : "";
