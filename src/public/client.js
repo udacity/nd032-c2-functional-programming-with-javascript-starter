@@ -58,7 +58,7 @@ const App = (state) => {
     <section>
       <div id="content" class="content-display-hidden">
         ${renderData(state)}
-        <div id="roverPhotos">
+        <div id="rover-photos">
           ${getRoverImage(state)}
         </div>
       </div>
