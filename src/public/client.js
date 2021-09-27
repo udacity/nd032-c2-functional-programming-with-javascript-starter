@@ -1,7 +1,3 @@
-// BEFLORE TODO: You should refactor so you can use this import instead of HTML Script of immutable
-// Immutable objects are called ‘maps’
-// import { Map } from "immutable";
-
 let store = Immutable.Map({
   user: { name: "Student" },
   apod: "",
