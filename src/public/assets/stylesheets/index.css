@@ -23,6 +23,7 @@ header {
 .content-display {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .rover {
