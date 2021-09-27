@@ -67,7 +67,6 @@ const App = (state) => {
         ${ImageOfTheDay(apod)}
       </div>
     </section>
-    <footer></footer>
     `;
 };
 
