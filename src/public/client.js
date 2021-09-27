@@ -95,9 +95,15 @@ window.addEventListener("load", () => {
 // Pure function that renders conditional information.
 
 const renderData = (state) => {
-  if (state.selectedRover) {
+  if (state.latest_photos && state.latest_photos[0]) {
+    const { name, launch_date, landing_date, status } =
+      state.latest_photos[0].rover;
     return `
-      <h3>${state.selectedRover}</h3>
+      <h3>Name: ${name}</h3>
+      <div>Launching Date: ${launch_date}</div>
+      <div>Landing Date: ${landing_date}</div>
+      <div>Status: ${status}</div>
+
     `;
   }
 
@@ -108,12 +114,12 @@ const renderData = (state) => {
 const getRoverImage = (state) => {
   const roverData = () =>
     state.latest_photos ? state.latest_photos[0] : undefined;
-  const roverDataSlice = roverData();
+  const data = roverData();
 
-  return roverDataSlice
+  return data
     ? `
     <div id='img-container'>
-      <img src="${roverDataSlice.img_src}" id="${roverDataSlice.rover.name}-img"></img>
+      <img src="${data.img_src}" id="${data.rover.name}-img"></img>
     </div>
     `
     : "";
@@ -164,7 +170,7 @@ const getRoverData = (roverName, show) => {
     .then((res) => res.json())
     .then((roverData) => {
       const latest_photos = roverData.latest_photos;
-      updateStore(store, { latest_photos, selectedRover: roverName });
+      updateStore(store, { latest_photos });
       render(root, store);
       if (show) {
         document.getElementById("content").style.display = "grid";
