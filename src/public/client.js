@@ -28,8 +28,8 @@ const navMenu = () => {
     .map((element) => {
       return `
         <div class="rover">
-          <button type="button" id="${element.toLowerCase()}" href=${element} onclick="roverButton(${element.toLowerCase()})">
-            <img id='${element.toLowerCase()}-img'>
+          <button type="button" id="${element}" href=${element} onclick="roverButton(${element})">
+            <img id='${element}-img'>
               <h2>${element}</h2>
             </img>
           </button>
@@ -111,9 +111,7 @@ const getRoverImage = (state) => {
   return roverDataSlice
     ? `
     <div id='img-container'>
-      <img src="${
-        roverDataSlice.img_src
-      }" id="${roverDataSlice.rover.name.toLowerCase()}-img"></img>
+      <img src="${roverDataSlice.img_src}" id="${roverDataSlice.rover.name}-img"></img>
     </div>
     `
     : "";
@@ -160,7 +158,7 @@ const getImageOfTheDay = (state) => {
 };
 
 const getRoverData = (roverName, show) => {
-  fetch(`http://localhost:3000/rover/${roverName.toLowerCase()}`)
+  fetch(`http://localhost:3000/rover/${roverName}`)
     .then((res) => res.json())
     .then((roverData) => {
       const latest_photos = roverData.latest_photos;
