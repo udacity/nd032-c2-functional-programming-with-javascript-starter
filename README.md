@@ -1,5 +1,16 @@
 # Functional Programming with Javascript
 
+## Reviewer Instructions
+
+### Running The Code
+
+1. Clone this repo
+2. Run `yarn`
+3. Get your API Developer Key: https://api.nasa.gov/
+4. Create `.env` file
+5. Add `API_KEY=${YOUR_API_KEY}`
+6. Open a terminal and run `yarn start`, then on your browser navigate to `http:localhost:3000`
+
 ## Student Instructions
 
 ### Big Picture
