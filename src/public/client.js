@@ -55,18 +55,18 @@ const App = (state) => {
         ${navMenu()}
       </nav>
     </header>
-    <main>
-      <section>
-        <div id="content" class="content-display-hidden">
-          ${renderData(state)}
-          <div id="roverPhotos">
-            ${getRoverImage(state)}
-          </div>
+    <section>
+      <div id="content" class="content-display-hidden">
+        ${renderData(state)}
+        <div id="roverPhotos">
+          ${getRoverImage(state)}
         </div>
+      </div>
+      <div class="image-of-the-day">
         <h2>Image of the Day:</h2>
         ${ImageOfTheDay(apod)}
-      </section>
-    </main>
+      </div>
+    </section>
     <footer></footer>
     `;
 };
@@ -127,7 +127,7 @@ const ImageOfTheDay = (apod) => {
       `;
     } else {
       return `
-        <img src="${apod.image.url}" height="350px" width="100%" />
+        <img src="${apod.image.url}" height="500px" width="500px" />
         <p>${apod.image.explanation}</p>
       `;
     }
@@ -135,24 +135,19 @@ const ImageOfTheDay = (apod) => {
 };
 
 // ------------------------------------------------------  API CALLS
-
-// Example API call
-const getImageOfTheDay = (state) => {
-  let { apod } = state;
-
+const getImageOfTheDay = () => {
   fetch(`http://localhost:3000/apod`)
     .then((res) => res.json())
     .then((apod) => updateStore(store, { apod }));
 };
 
-const getRoverData = (roverName, show) => {
+const getRoverData = (roverName, display) => {
   fetch(`http://localhost:3000/rover/${roverName}`)
     .then((res) => res.json())
     .then((roverData) => {
       const latest_photos = roverData.latest_photos;
       updateStore(store, { latest_photos });
-      render(root, store);
-      if (show) {
+      if (display) {
         document.getElementById("content").className = "content-display";
       }
     });
