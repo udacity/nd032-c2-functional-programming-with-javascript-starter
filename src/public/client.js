@@ -57,21 +57,13 @@ const App = (state) => {
     </header>
     <main>
       <section>
-        <div id="content" style="display:none">
+        <div id="content" class="display-content-hidden">
           ${renderData(state)}
           <div id="roverPhotos">
             ${getRoverImage(state)}
           </div>
         </div>
-        <p>Here is an example section.</p>
-        <p>
-          One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
-          the most popular websites across all federal agencies. It has the popular appeal of a Justin Bieber video.
-          This endpoint structures the APOD imagery and associated metadata so that it can be repurposed for other
-          applications. In addition, if the concept_tags parameter is set to True, then keywords derived from the image
-          explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
-          but generally help with discoverability of relevant imagery.
-        </p>
+        <h2>Image of the Day:</h2>
         ${ImageOfTheDay(apod)}
       </section>
     </main>
@@ -97,11 +89,9 @@ const renderData = (state) => {
       <div>Launching Date: ${launch_date}</div>
       <div>Landing Date: ${landing_date}</div>
       <div>Status: ${status}</div>
-
     `;
   }
-
-  return `<h1>PLACEHOLDER!</h1>`;
+  return ``;
 };
 
 //get latest rover image (Higher Order function)
@@ -123,7 +113,6 @@ const getRoverImage = (state) => {
 const ImageOfTheDay = (apod) => {
   // If image does not already exist, or it is not from today -- request it again
   const today = new Date();
-  const photodate = new Date(store.get("apod.date"));
   if (!apod || apod.date === today.getDate()) {
     getImageOfTheDay(store);
   }
@@ -164,7 +153,7 @@ const getRoverData = (roverName, show) => {
       updateStore(store, { latest_photos });
       render(root, store);
       if (show) {
-        document.getElementById("content").style.display = "grid";
+        document.getElementById("content").style.class = "content-display";
       }
     });
 };
