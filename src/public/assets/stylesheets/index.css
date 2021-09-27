@@ -16,23 +16,44 @@ main {
   padding: 20px;
 }
 
-footer {
-  /* footer styles */
+.rover-nav {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
-/* -------------------  TABLET  --------------------- */
-@media (min-width: 768px) {
-  /* use mobile */
+.content-display-hidden {
+  display: none;
+}
+
+.content-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rover {
+  margin: 0 3px;
+}
+
+.rover-media {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px;
+}
+
+.image-of-the-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* -------------------  DESKTOP  -------------------- */
 
 @media (min-width: 1224px) {
   /* use mobile */
-}
-
-/* -------------------  LARGE SCREENS  -------------- */
-
-@media (min-width: 1824px) {
-  /* use mobile */
+  .rover-media {
+    flex-direction: row;
+  }
 }

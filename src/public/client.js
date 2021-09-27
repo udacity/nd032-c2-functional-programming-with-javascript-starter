@@ -1,105 +1,166 @@
-let store = {
-    user: { name: "Student" },
-    apod: '',
-    rovers: ['Curiosity', 'Opportunity', 'Spirit'],
-}
+let store = Immutable.Map({
+  user: { name: "Student" },
+  apod: "",
+  rovers: ["Curiosity", "Opportunity", "Spirit"],
+  selectedRover: ""
+});
 
 // add our markup to the page
-const root = document.getElementById('root')
+const root = document.getElementById("root");
 
 const updateStore = (store, newState) => {
-    store = Object.assign(store, newState)
-    render(root, store)
-}
+  store = Object.assign(store, newState);
+  render(root, store);
+};
 
 const render = async (root, state) => {
-    root.innerHTML = App(state)
-}
+  root.innerHTML = App(state);
+};
 
+const navMenu = () => {
+  const navArray = () => store.get("rovers");
+
+  return navArray()
+    .map((element) => {
+      return `
+        <div class="rover">
+          <button type="button" id="${element}" href=${element} onclick="roverButton(${element})">
+            <img id='${element}-img'>
+              <h2>${element}</h2>
+            </img>
+          </button>
+        </div>
+      `;
+    })
+    .join("");
+};
+
+//button
+function roverButton(button) {
+  const selectedRover = button.id;
+  getRoverData(selectedRover, true);
+}
 
 // create content
 const App = (state) => {
-    let { rovers, apod } = state
+  let { apod } = state;
 
-    return `
-        <header></header>
-        <main>
-            ${Greeting(store.user.name)}
-            <section>
-                <h3>Put things on the page!</h3>
-                <p>Here is an example section.</p>
-                <p>
-                    One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
-                    the most popular websites across all federal agencies. It has the popular appeal of a Justin Bieber video.
-                    This endpoint structures the APOD imagery and associated metadata so that it can be repurposed for other
-                    applications. In addition, if the concept_tags parameter is set to True, then keywords derived from the image
-                    explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
-                    but generally help with discoverability of relevant imagery.
-                </p>
-                ${ImageOfTheDay(apod)}
-            </section>
-        </main>
-        <footer></footer>
-    `
-}
+  return `
+    <header>
+      <nav class="rover-nav">
+        ${navMenu()}
+      </nav>
+    </header>
+    <section>
+      <div id="content" class="content-display-hidden">
+        ${renderData(state)}
+        <div id="rover-photos">
+          ${getRoverImages(state)}
+        </div>
+      </div>
+      <div class="image-of-the-day">
+        <h2>Image of the Day:</h2>
+        ${ImageOfTheDay(apod)}
+      </div>
+    </section>
+    `;
+};
 
 // listening for load event because page should load before any JS is called
-window.addEventListener('load', () => {
-    render(root, store)
-})
+window.addEventListener("load", () => {
+  render(root, store);
+});
 
 // ------------------------------------------------------  COMPONENTS
 
-// Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
-const Greeting = (name) => {
-    if (name) {
-        return `
-            <h1>Welcome, ${name}!</h1>
-        `
+// Pure function that renders conditional information.
+const renderData = (state) => {
+  if (state.latest_photos && state.latest_photos[0]) {
+    const { name, launch_date, landing_date, status } =
+      state.latest_photos[0].rover;
+    return `
+      <h3>Rover Name: ${name}</h3>
+      <div>Launching Date: ${launch_date}</div>
+      <div>Landing Date: ${landing_date}</div>
+      <div>Status: ${status}</div>
+    `;
+  }
+  return ``;
+};
+
+//get latest rover images (Higher Order function)
+const getRoverImages = (state) => {
+  const roverData = () =>
+    state.latest_photos ? state.latest_photos : undefined;
+  let data = roverData();
+
+  if (data) {
+    if (data.length >= 4) {
+      data = data.splice(0, 4);
     }
 
-    return `
-        <h1>Hello!</h1>
-    `
-}
+    return data
+      .map((element) => {
+        return `
+          <div id='img-container'>
+            <img src="${element.img_src}" id="${element.rover.name}-img" height="500px" width="500px"></img>
+          </div>
+        `;
+      })
+      .join("");
+  }
+};
 
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {
+  // If image does not already exist, or it is not from today -- request it again
+  const today = new Date();
+  if (!apod || apod.date === today.getDate()) {
+    getImageOfTheDay(store);
+  }
 
-    // If image does not already exist, or it is not from today -- request it again
-    const today = new Date()
-    const photodate = new Date(apod.date)
-    console.log(photodate.getDate(), today.getDate());
-
-    console.log(photodate.getDate() === today.getDate());
-    if (!apod || apod.date === today.getDate()) {
-        getImageOfTheDay(store)
-    }
-
-    // check if the photo of the day is actually type video!
-    if (apod.media_type === "video") {
-        return (`
-            <p>See today's featured video <a href="${apod.url}">here</a></p>
-            <p>${apod.title}</p>
-            <p>${apod.explanation}</p>
-        `)
+  // check if the image is actually a video
+  if (apod && apod.image) {
+    if (apod.image.media_type === "video") {
+      return `
+      <div class="rover-media">
+        <iframe width="560" height="315" src="${apod.image.url}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="rover-media">
+          <p>${apod.image.title}</p>
+          <p>${apod.image.explanation}</p>
+        </div>
+      </div>
+      `;
     } else {
-        return (`
-            <img src="${apod.image.url}" height="350px" width="100%" />
-            <p>${apod.image.explanation}</p>
-        `)
+      return `
+      <div class="rover-media">
+        <img src="${apod.image.url}" height="500px" width="500px" />
+        <div class="rover-media">
+          <p>${apod.image.explanation}</p>
+        </div>
+      </div>
+      `;
     }
-}
+  } else {
+    return "";
+  }
+};
 
 // ------------------------------------------------------  API CALLS
+const getImageOfTheDay = () => {
+  fetch(`http://localhost:3000/apod`)
+    .then((res) => res.json())
+    .then((apod) => updateStore(store, { apod }));
+};
 
-// Example API call
-const getImageOfTheDay = (state) => {
-    let { apod } = state
-
-    fetch(`http://localhost:3000/apod`)
-        .then(res => res.json())
-        .then(apod => updateStore(store, { apod }))
-
-    return data
-}
+const getRoverData = (roverName, display) => {
+  fetch(`http://localhost:3000/rover/${roverName}`)
+    .then((res) => res.json())
+    .then((roverData) => {
+      const latest_photos = roverData.latest_photos;
+      updateStore(store, { latest_photos });
+      if (display) {
+        document.getElementById("content").className = "content-display";
+      }
+    });
+};
