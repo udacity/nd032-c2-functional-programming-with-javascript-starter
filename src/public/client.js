@@ -59,7 +59,7 @@ const App = (state) => {
       <div id="content" class="content-display-hidden">
         ${renderData(state)}
         <div id="rover-photos">
-          ${getRoverImage(state)}
+          ${getRoverImages(state)}
         </div>
       </div>
       <div class="image-of-the-day">
@@ -92,19 +92,28 @@ const renderData = (state) => {
   return ``;
 };
 
-//get latest rover image (Higher Order function)
-const getRoverImage = (state) => {
+//get latest rover images (Higher Order function)
+const getRoverImages = (state) => {
   const roverData = () =>
-    state.latest_photos ? state.latest_photos[0] : undefined;
+    state.latest_photos ? state.latest_photos : undefined;
   const data = roverData();
+  let images = "";
+  let stopLoop = false;
+  if (data) {
+    let loopCounter = 0;
+    while (loopCounter <= data.length && !stopLoop) {
+      data[loopCounter]
+        ? (images += `
+        <div id='img-container'>
+          <img src="${data[loopCounter].img_src}" id="${data[loopCounter].rover.name}-img" height="500px" width="500px"></img>
+        </div>
+      `)
+        : "";
+      loopCounter === 4 ? (stopLoop = true) : loopCounter++;
+    }
+  }
 
-  return data
-    ? `
-    <div id='img-container'>
-      <img src="${data.img_src}" id="${data.rover.name}-img" height="500px" width="500px"></img>
-    </div>
-    `
-    : "";
+  return images;
 };
 
 // Example of a pure function that renders infomation requested from the backend
