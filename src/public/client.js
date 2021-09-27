@@ -57,7 +57,7 @@ const App = (state) => {
     </header>
     <main>
       <section>
-        <div id="content" class="display-content-hidden">
+        <div id="content" class="content-display-hidden">
           ${renderData(state)}
           <div id="roverPhotos">
             ${getRoverImage(state)}
@@ -153,7 +153,7 @@ const getRoverData = (roverName, show) => {
       updateStore(store, { latest_photos });
       render(root, store);
       if (show) {
-        document.getElementById("content").style.class = "content-display";
+        document.getElementById("content").className = "content-display";
       }
     });
 };
