@@ -11,6 +11,11 @@ header {
   /* header styles */
 }
 
+main {
+  flex: 1;
+  padding: 20px;
+}
+
 .rover-nav {
   display: flex;
   justify-content: center;
@@ -30,9 +35,10 @@ header {
   margin: 0 3px;
 }
 
-main {
-  flex: 1;
-  padding: 20px;
+.image-of-the-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 footer {
