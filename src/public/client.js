@@ -128,16 +128,26 @@ const ImageOfTheDay = (apod) => {
   if (apod && apod.image) {
     if (apod.image.media_type === "video") {
       return `
+      <div class="rover-media">
         <iframe width="560" height="315" src="${apod.image.url}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        <p>${apod.image.title}</p>
-        <p>${apod.image.explanation}</p>
+        <div class="rover-media">
+          <p>${apod.image.title}</p>
+          <p>${apod.image.explanation}</p>
+        </div>
+      </div>
       `;
     } else {
       return `
+      <div class="rover-media">
         <img src="${apod.image.url}" height="500px" width="500px" />
-        <p>${apod.image.explanation}</p>
+        <div class="rover-media">
+          <p>${apod.image.explanation}</p>
+        </div>
+      </div>
       `;
     }
+  } else {
+    return "";
   }
 };
 
