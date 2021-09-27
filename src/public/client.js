@@ -102,21 +102,20 @@ const renderData = (state) => {
   return `<h1>PLACEHOLDER!</h1>`;
 };
 
-//get up to 4 rover images(Higher Order function)
+//get latest rover image (Higher Order function)
 const getRoverImage = (state) => {
   const roverData = () => state.latest_photos;
-  const roverDataSlice = roverData().slice(0, 4);
+  const roverDataSlice = roverData()[0] || undefined;
+
   return roverDataSlice
-    .map((e) => {
-      return `
-          <div id='img-container'>
-              <img src="${
-                e.img_src
-              }" id="${e.rover.name.toLowerCase()}-img"></img>
-          </div>
-          `;
-    })
-    .join(" ");
+    ? `
+    <div id='img-container'>
+      <img src="${
+        roverDataSlice.img_src
+      }" id="${roverDataSlice.rover.name.toLowerCase()}-img"></img>
+    </div>
+    `
+    : "";
 };
 
 // Example of a pure function that renders infomation requested from the backend
