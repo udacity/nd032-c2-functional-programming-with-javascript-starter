@@ -96,24 +96,23 @@ const renderData = (state) => {
 const getRoverImages = (state) => {
   const roverData = () =>
     state.latest_photos ? state.latest_photos : undefined;
-  const data = roverData();
-  let images = "";
-  let stopLoop = false;
-  if (data) {
-    let loopCounter = 0;
-    while (loopCounter <= data.length && !stopLoop) {
-      data[loopCounter]
-        ? (images += `
-        <div id='img-container'>
-          <img src="${data[loopCounter].img_src}" id="${data[loopCounter].rover.name}-img" height="500px" width="500px"></img>
-        </div>
-      `)
-        : "";
-      loopCounter === 4 ? (stopLoop = true) : loopCounter++;
-    }
-  }
+  let data = roverData();
 
-  return images;
+  if (data) {
+    if (data.length >= 4) {
+      data = data.splice(0, 4);
+    }
+
+    return data
+      .map((element) => {
+        return `
+          <div id='img-container'>
+            <img src="${element.img_src}" id="${element.rover.name}-img" height="500px" width="500px"></img>
+          </div>
+        `;
+      })
+      .join("");
+  }
 };
 
 // Example of a pure function that renders infomation requested from the backend
