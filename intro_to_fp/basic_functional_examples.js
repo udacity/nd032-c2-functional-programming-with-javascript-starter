@@ -4,8 +4,17 @@
 //       its afternoon and "good morning" any other time of the day.
 // Hint - this will help with time of day: new Date().getHours()
 // -----------------------------------------------------------------
+timeOfDay = new Date().getHours();
 
+const greet = (timeOfDay) => {
+    if (timeOfDay > 12 && timeOfDay < 18) {
+        return 'good afternoon'
+        
+    } else {
+        "good morning"
+    }
 
+}
 
 
 // -----------------------------------------------------------------
@@ -16,3 +25,8 @@
 // -----------------------------------------------------------------
 
 
+const countDown = (number) => {
+  for (let index = 0; index < number.length; index++) {
+    return number[index];
+  }
+};

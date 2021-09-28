@@ -16,3 +16,22 @@ if(status === 'active' && warp <= 4) {
 }
 
 console.log(status_report)
+
+
+// result
+// Captain, the engines are active and we could be going faster.
+// status active en warp 2 
+
+const showStatus = (status, warp) => {
+    if(status === 'active' && warp <= 4) {
+        status_report += 'the engines are active and we could be going faster.'
+    } else if (status === 'active' && warp > 4) {
+        status_report += 'the engines are active and we are going ' + warp + '.'
+    } else if (status === 'down') {
+        status_report += 'the engines are down.'
+    } else {
+        status_report += 'the comms are down and we can`t reach engineering.'
+    }
+}
+
+console.log(showStatus(status, warp))
