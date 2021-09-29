@@ -32,6 +32,11 @@ main {
   margin: 10px;
 }
 
+.rover-img-content {
+  height: 500px;
+  width: 500px;
+}
+
 .rover {
   margin: 0 3px;
 }
@@ -51,6 +56,20 @@ main {
 
 /* -------------------  TABLET  --------------------- */
 @media (min-width: 768px) {
+  #rover-photos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .rover-media {
+    flex-direction: row;
+  }
+
+  .rover-img-content {
+    height: 250px;
+    width: 250px;
+  }
 }
 
 /* -------------------  DESKTOP  -------------------- */
@@ -63,9 +82,18 @@ main {
   .rover-media {
     flex-direction: row;
   }
+
+  .rover-img-content {
+    height: 375px;
+    width: 375px;
+  }
 }
 
 /* -------------------  LARGE SCREENS  -------------- */
 
 @media (min-width: 1824px) {
+  .rover-img-content {
+    height: 425px;
+    width: 425px;
+  }
 }
