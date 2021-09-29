@@ -102,7 +102,7 @@ const getRoverImages = (state) => {
     return data
       .map((element) => {
         return `
-          <div id='img-container'>
+          <div class='rover-img-container'>
             <img src="${element.img_src}" id="${element.rover.name}-img" height="500px" width="500px"></img>
           </div>
         `;

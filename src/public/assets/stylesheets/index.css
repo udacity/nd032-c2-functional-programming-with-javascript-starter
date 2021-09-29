@@ -7,10 +7,6 @@ body {
   min-height: 100vh;
 }
 
-header {
-  /* header styles */
-}
-
 main {
   flex: 1;
   padding: 20px;
@@ -32,6 +28,10 @@ main {
   align-items: center;
 }
 
+.rover-img-container {
+  margin: 10px;
+}
+
 .rover {
   margin: 0 3px;
 }
@@ -49,11 +49,23 @@ main {
   align-items: center;
 }
 
+/* -------------------  TABLET  --------------------- */
+@media (min-width: 768px) {
+}
+
 /* -------------------  DESKTOP  -------------------- */
 
 @media (min-width: 1224px) {
-  /* use mobile */
+  #rover-photos {
+    display: flex;
+  }
+
   .rover-media {
     flex-direction: row;
   }
+}
+
+/* -------------------  LARGE SCREENS  -------------- */
+
+@media (min-width: 1824px) {
 }
