@@ -42,3 +42,17 @@ state = Object.assign(state, incomingState);
 // } 
 
 // Your Code here
+
+
+const newIncomingState =     {
+    ship: {
+        name: 'Escape',
+        class: 'Friendship'
+    },
+    role: 'Pilot',
+    }
+
+
+state = Object.assign(state, newIncomingState)
+
+console.log(state)

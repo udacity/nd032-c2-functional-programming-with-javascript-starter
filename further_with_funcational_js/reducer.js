@@ -20,11 +20,15 @@ const shieldsReducer = (state = initialState, action) => {
 		
 			// YOUR TURN: if the action object has a property called "amount", use destructuring to save that value to a const
 			// YOUR CODE HERE
+
+            const { amount } = action
 		
             let { shieldLevel } = state
 
             // YOUR TURN: You now have the shield level from state and amount of change from the action. Given that this is the DAMAGE_SHIELD reducer, write the logic to reflect what should happen
 			// YOUR CODE HERE
+
+            shieldLevel -= amount
 			
             return {
                 ...state,
@@ -34,6 +38,10 @@ const shieldsReducer = (state = initialState, action) => {
         case REPAIR_SHIELD:
             
 			// YOUR TURN: Using the reducer above as a template, fill in the contents of the REPAIR_SHIELD reducer
+            const { amount } = action
+            let { shieldLevel } = state
+
+            shieldLevel += amount
 			
             return {
                 ...state,

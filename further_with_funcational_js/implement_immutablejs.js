@@ -15,3 +15,21 @@ const updateStore = (store, newState) => {
     store = Object.assign(store, newState)
     render(root, store)
 }
+
+
+// SOLUTION
+
+let store = Immutable.Map({ 
+    user: Immutable.Map({ 
+        firstName: 'John', 
+        lastName: 'Doe' 
+    }), 
+})
+
+function updateStore(state, newState) {
+    store = state.merge(newState)
+    render(root, store)
+}
+
+updateStore(store, newState)
+console.log(store.getIn(['user', 'name']))

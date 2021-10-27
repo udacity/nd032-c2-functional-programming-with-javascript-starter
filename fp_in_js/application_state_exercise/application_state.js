@@ -31,4 +31,10 @@ window.addEventListener('load', () => {
 // create a function called updateStore that takes in the old state, the new state, and updates the old state with any new information
 // This won't be a pure function, instead of a return, call the render method again
 
-// Your Code
+
+//  Object.assign() is a method that copies an object's own (non-inherited) properties from one or more source objects into a target object, then returns the updated target object. In other words, Object.assign() adds to the target object by merging in the source object(s). 
+
+const updateStore = (store, newState) => {
+    store = Object.assign(store, newState)
+    render(root, store)
+}

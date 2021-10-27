@@ -100,6 +100,9 @@ const characters = [
 
 // Create an array containing only the names of Captains from all universes.
 
+const captains = characters.filter(character => character.name console.log(character.name) )
+console.log(captains)
+
 // Your Code here
 
 // expected output: ['Mal Reynolds', 'Kathryn Janeway']

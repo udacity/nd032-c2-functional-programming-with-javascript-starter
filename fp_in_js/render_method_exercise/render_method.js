@@ -17,6 +17,18 @@ const render = root => {
     root.innerHTML = App()
 }
 
+const Menu = (show) => {
+    return show
+        ? `<nav>
+<ul>
+    <li>About Us</li>
+    <li>Contact Us</li>
+    <li>Login</li>
+</ul>
+</nav>`
+        : `<nav>Menu</nav> `;
+};
+
 render(root)
 
 // Add a new Menu component that takes in a show argument which is either true or false

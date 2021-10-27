@@ -9,6 +9,24 @@ const character = {
 };
 
 console.log(Object.keys(character));
+
+const print = Object.keys(character)
+
+print.map = ((x) => {
+    return "This character has a(n) " + x
+})
+
+console.log (print.map)
+
+
+// SOLUTION CODE
+const keys = Object.keys(character)
+
+keys.map(key => {
+    console.log(`This character has a(n) ${key}`)
+    return `This character has a(n) ${key}`
+})
+
 // Expected Output: 
 // This character has a(n) id.
 // This character has a(n) name.
@@ -16,3 +34,4 @@ console.log(Object.keys(character));
 // This character has a(n) planet.
 // This character has a(n) job.
 // [ 'This character has a(n) id',  'This character has a(n) name',  'This character has a(n) race', 'This character has a(n) planet', 'This character has a(n) job' ]
+
