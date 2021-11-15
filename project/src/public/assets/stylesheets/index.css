@@ -7,6 +7,11 @@ body {
   min-height: 100vh;
 }
 
+.container {
+  margin-left: 100;
+  margin-right: 100;
+}
+
 header {
   /* header styles */
 }
@@ -14,6 +19,8 @@ header {
 main {
   flex: 1;
   padding: 20px;
+  margin-left: 100;
+  margin-right: 100;
 }
 
 footer {
