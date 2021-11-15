@@ -10,6 +10,7 @@ body {
 .container {
   margin-left: 100;
   margin-right: 100;
+  background-color: red;
 }
 
 header {
