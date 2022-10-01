@@ -64,8 +64,11 @@ const RoverInfo = (store) => {
 }
 
 // ------------------------------------------------------  HELPERS
+
+// HOF taking cardCreator as a parameter, per project requirements
 const createAllRoverCards = (store, cardCreator) => {
     console.log("========== DEBUG: made it to createAllRoverCards() ==========")
+    // Map each rover to its card, per project requirements
     return `${store.rovers.map(rover => cardCreator(rover)).join('')}`
 }
 
@@ -81,6 +84,15 @@ const createRoverCard= (rover) => {
         `
     )
 }
+
+// TODO: Write function to get URls for each photo
+
+
+// TODO: Write function to create cards for each rover photo (using URL from other function)
+
+
+
+
 
 // // Example of a pure function that renders infomation requested from the backend
 // const ImageOfTheDay = (apod) => {
