@@ -19,15 +19,15 @@ const render = async (root, state) => {
 
 
 // create content
-const App = (state) => {
-    let { rovers, roverInfo } = state
+const App = (store) => {
+    let { rovers, roverInfo } = store
 
     return `
         <header>NASA Mars Rover Dashboard</header>
         <main>
             ${Greeting(store.user.name)}
             <section>
-                ${RoverInfo(state)}
+                ${RoverInfo(store)}
             </section>
         </main>
         <footer>Nicholas Cunningham</footer>
@@ -36,38 +36,48 @@ const App = (state) => {
 
 // listening for load event because page should load before any JS is called
 window.addEventListener('load', () => {
+    console.log("========== DEBUG: Page loaded ==========")
     render(root, store)
 })
 
 // ------------------------------------------------------  COMPONENTS
 
 const Greeting = (name) => {
-    return name ? <h1>Welcome, ${name}!</h1> : <h1>Hello!</h1>
+    return (name ? `<h1>Welcome, ${name}!</h1>` : `<h1>Hello!</h1>`)
 }
 
-const RoverInfo = (state) => {
-    // Get rover selection on initial run
-    if (!state.currentRover) {
-        createAllRoverCards(state, createRoverCard)
+const RoverInfo = (store) => {
+    console.log("========== DEBUG: made it to RoverInfo() ==========")
+
+    // Get rover info on initial run
+    if (!store.currentRover) {
+        getRoverInfo(store)
     }
-
-    getRoverInfo(state)
-
+    
+    
     return (
-        <p>This is a sample of the rover data.</p>
+        `
+        ${createAllRoverCards(store, createRoverCard)}
+        <button onClick="updateStore({currentRover: '', roverInfo: ''})>Click Me!</button>
+        `
     )
 }
 
 // ------------------------------------------------------  HELPERS
-const createAllRoverCards = (state, cardCreator) => {
-    return `${state.rovers.map(rover => cardCreator(state, rover))}`
+const createAllRoverCards = (store, cardCreator) => {
+    console.log("========== DEBUG: made it to createAllRoverCards() ==========")
+    return `${store.rovers.map(rover => cardCreator(rover)).join('')}`
 }
 
-const createRoverCard= (state, rover) => {
+const createRoverCard= (rover) => {
+    console.log("========== DEBUG: made it to createRoverCard() ==========")
+
     return (
         `
-        <h1 class='card-title'>You have selected the ${rover} rover</h1>
-        <button onClick="setTimeout(updateStore, 1000, {currentRover: '${rover}'"></button>
+        <div>
+            <h1 class='card-title'>You have selected the ${rover} rover</h1>
+            <button type="button" onClick="setTimeout(updateStore, 1000, store, {currentRover: '${rover}'">Click me!</button>
+        </div>
         `
     )
 }
@@ -106,13 +116,12 @@ const createRoverCard= (state, rover) => {
 
 // ------------------------------------------------------  API CALLS
 
-// Example API call
-const getRoverInfo = (state) => {
-    let { currentRover } = state
+const getRoverInfo = (store) => {
+    console.log("========== DEBUG: made it to getRoverInfo() ==========")
+
+    let { currentRover } = store
 
     fetch(`http://localhost:3000/${currentRover}`)
         .then(res => res.json())
         .then(roverInfo => updateStore(store, { roverInfo }))
-
-    return data
 }
