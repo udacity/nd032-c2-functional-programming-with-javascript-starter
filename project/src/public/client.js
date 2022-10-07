@@ -67,7 +67,6 @@ const RoverInfo = (store) => {
 
 
     
-    // ==================== TODO: Figure out why Reset button isn't showing up in render ====================
     // ==================== TODO: Figure out why Spirit doesn't produce any pictures (and account for that if needed) ====================
 
 
@@ -79,8 +78,12 @@ const RoverInfo = (store) => {
     return (
         `
         <h1 class='card-title'>Current rover: ${currentRover}</h1>
-        ${createPhotoCard(roverInfo.image.photos[0].img_src)}
-        <button onClick="updateStore({currentRover: '', roverInfo: ''})>Reset</button>
+        <div>
+            <button type="button" onClick="setTimeout(updateStore, 100, store, {currentRover: '', roverInfo: ''})">Reset</button>
+        </div>
+        <div>
+            ${createPhotoCard(roverInfo.image.photos[0].img_src)}
+        </div>
         `
     )
 }
@@ -100,7 +103,7 @@ const createRoverCard= (rover) => {
 
     return (
         `
-        <button type="button" onClick="setTimeout(updateStore, 1000, store, {currentRover: '${rover}'})">${rover}</button>
+        <button type="button" onClick="setTimeout(updateStore, 100, store, {currentRover: '${rover}'})">${rover}</button>
         `
     )
 }
