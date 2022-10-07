@@ -10,6 +10,7 @@ const root = document.getElementById('root')
 
 const updateStore = (store, newState) => {
     store = Object.assign(store, newState)
+    console.log("========== DEBUG: Store updated ==========")
     render(root, store)
 }
 
@@ -20,12 +21,12 @@ const render = async (root, state) => {
 
 // create content
 const App = (store) => {
-    let { rovers, roverInfo } = store
+    let { user, currentRover, rovers, roverInfo } = store
 
     return `
         <header>NASA Mars Rover Dashboard</header>
         <main>
-            ${Greeting(store.user.name)}
+            ${Greeting(user.name)}
             <section>
                 ${RoverInfo(store)}
             </section>
@@ -48,22 +49,36 @@ const Greeting = (name) => {
 
 const RoverInfo = (store) => {
     console.log("========== DEBUG: made it to RoverInfo() ==========")
+    
+    let { user, currentRover, rovers, roverInfo } = store
 
-    // Get rover info on initial run
-    if (!store.currentRover) {
-        getRoverInfo(store)
+    // Create rover cards on page load so we can select a rover
+    if (!currentRover) {
+        return `${createAllRoverCards(store, createRoverCard)}`
     }
-    
-    
+
+    // Store rover info from API call (and return to avoid accessing undefined data)
+    if (!roverInfo) {
+        getRoverInfo(store)
+        return ''
+    }
+
+    console.log({roverInfo})
+
     return (
         `
-        ${createAllRoverCards(store, createRoverCard)}
-        <button onClick="updateStore({currentRover: '', roverInfo: ''})>Click Me!</button>
+        <h1 class='card-title'>Current rover: ${currentRover}</h1>
+        ${createPhotoCard(roverInfo.image.photos[0].img_src)}
+        <button onClick="updateStore({currentRover: '', roverInfo: ''})>Reset</button>
         `
     )
 }
 
 // ------------------------------------------------------  HELPERS
+
+// const getPhotoURL = (rover) => {
+//     return rover
+// }
 
 // HOF taking cardCreator as a parameter, per project requirements
 const createAllRoverCards = (store, cardCreator) => {
@@ -77,19 +92,22 @@ const createRoverCard= (rover) => {
 
     return (
         `
-        <div>
-            <h1 class='card-title'>You have selected the ${rover} rover</h1>
-            <button type="button" onClick="setTimeout(updateStore, 1000, store, {currentRover: '${rover}'">Click me!</button>
-        </div>
+        <button type="button" onClick="setTimeout(updateStore, 1000, store, {currentRover: '${rover}'})">${rover}</button>
         `
     )
 }
 
-// TODO: Write function to get URls for each photo
-
-
-// TODO: Write function to create cards for each rover photo (using URL from other function)
-
+const createPhotoCard = (imageURL) => {
+    console.log("========== DEBUG: made it to createPhotoCard() ==========")
+    
+    return (
+        `
+        <div>
+            <img src="${imageURL}">
+        </div>
+        `
+    )
+}
 
 
 
@@ -130,8 +148,9 @@ const createRoverCard= (rover) => {
 
 const getRoverInfo = (store) => {
     console.log("========== DEBUG: made it to getRoverInfo() ==========")
-
+    
     let { currentRover } = store
+    console.log({currentRover})
 
     fetch(`http://localhost:3000/${currentRover}`)
         .then(res => res.json())
