@@ -24,14 +24,17 @@ const App = (store) => {
     let { user, currentRover, rovers, roverInfo } = store
 
     return `
-        <header>NASA Mars Rover Dashboard</header>
+        <header><h1>NASA Mars Rover Dashboard</h1></header>
         <main>
             ${Greeting(user.name)}
             <section>
                 ${RoverInfo(store)}
             </section>
         </main>
-        <footer>Nicholas Cunningham</footer>
+        <footer>
+            Page created by Nicholas Cunningham
+            for Udacity Intermediate JavaScript Course
+        </footer>
     `
 }
 
@@ -51,38 +54,51 @@ const RoverInfo = (store) => {
     console.log("========== DEBUG: made it to RoverInfo() ==========")
     
     let { user, currentRover, rovers, roverInfo } = store
-
+    
     // Create rover cards on page load so we can select a rover
     if (!currentRover) {
-        return `${createAllRoverCards(store, createRoverCard)}`
+        return `
+        <p>Please choose a rover to learn about:</p>
+        ${createAllRoverCards(store, createRoverCard)}
+        `
     }
-
+    
     // Store rover info from API call (and return to avoid accessing undefined data)
     if (!roverInfo) {
         getRoverInfo(store)
         return ''
     }
-
-
-
-
+    
+    
+    
+    
     
     // ==================== TODO: Figure out why Spirit doesn't produce any pictures (and account for that if needed) ====================
-
-
-
-
-
-
-
+    
+    
+    
+    
+    
+    // ==================== TODO: Finish styling and make sure it works on all different screen sizes ====================
+    
+    
+    
+    
+    
+    
+    
+    let randomPhotoIndex = Math.floor(Math.random() * roverInfo.image.photos.length)
     return (
         `
-        <h1 class='card-title'>Current rover: ${currentRover}</h1>
+        <h3 class='card-title'>${currentRover}</h2>
+        <div>
+            ${createRoverInfoBlock(currentRover)}
+        </div>
         <div>
             <button type="button" onClick="setTimeout(updateStore, 100, store, {currentRover: '', roverInfo: ''})">Reset</button>
         </div>
         <div>
-            ${createPhotoCard(roverInfo.image.photos[0].img_src)}
+            ${createPhotoCard(roverInfo.image.photos[randomPhotoIndex].img_src)}
         </div>
         `
     )
@@ -116,6 +132,18 @@ const createPhotoCard = (imageURL) => {
         <img src="${imageURL}">
         `
     )
+}
+
+const createRoverInfoBlock = (rover) => {
+    const {launchDate, landingDate, status} = rover
+
+    return (`
+        <ul>
+            <li>Launch date: ${launchDate}</li>
+            <li>Landing date: ${landingDate}</li>
+            <li>Status: ${status}</li>
+        </ul>
+    `)
 }
 
 

@@ -11,6 +11,11 @@ header {
   /* header styles */
 }
 
+img {
+  max-width: 85%;
+  height: auto;
+}
+
 main {
   flex: 1;
   padding: 20px;
