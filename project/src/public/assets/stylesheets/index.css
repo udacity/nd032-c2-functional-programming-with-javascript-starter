@@ -7,8 +7,14 @@ body {
   min-height: 100vh;
 }
 
-header {
-  /* header styles */
+main {
+  flex: 1;
+  padding: 20px;
+}
+
+footer {
+  position: fixed;
+  bottom: 10px;
 }
 
 img {
@@ -16,28 +22,26 @@ img {
   height: auto;
 }
 
-main {
-  flex: 1;
-  padding: 20px;
-}
 
-footer {
-  /* footer styles */
-}
-
-/* -------------------  TABLET  --------------------- */
+/* -------------------  DESKTOP  --------------------- */
 @media (min-width: 768px) {
-  /* use mobile */
-}
+  body {
+    display: flex;
+    flex-direction: column;
+    font-family: Arial;
+    min-height: 100vh;
+  }
 
-/* -------------------  DESKTOP  -------------------- */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
 
-@media (min-width: 1224px) {
-  /* use mobile */
-}
+  .row {
+    display: flex;
+  }
 
-/* -------------------  LARGE SCREENS  -------------- */
-
-@media (min-width: 1824px) {
-  /* use mobile */
+  .col {
+    flex: 1;
+  }
 }

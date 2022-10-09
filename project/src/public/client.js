@@ -21,12 +21,10 @@ const render = async (root, state) => {
 
 // create content
 const App = (store) => {
-    let { user, currentRover, rovers, roverInfo } = store
-
     return `
         <header><h1>NASA Mars Rover Dashboard</h1></header>
         <main>
-            ${Greeting(user.name)}
+            ${Greeting(store.user.name)}
             <section>
                 ${RoverInfo(store)}
             </section>
@@ -50,16 +48,14 @@ const Greeting = (name) => {
     return (name ? `<h1>Welcome, ${name}!</h1>` : `<h1>Hello!</h1>`)
 }
 
-const RoverInfo = (store) => {
-    console.log("========== DEBUG: made it to RoverInfo() ==========")
+const RoverInfo = (store) => {    
+    let { currentRover, roverInfo } = store
     
-    let { user, currentRover, rovers, roverInfo } = store
-    
-    // Create rover cards on page load so we can select a rover
+    // Create rover buttons on initial page load so we can select a rover
     if (!currentRover) {
         return `
-        <p>Please choose a rover to learn about:</p>
-        ${createAllRoverCards(store, createRoverCard)}
+            <p><b>Please choose a rover to learn about:</b></p>
+            ${createAllRoverButtons(store, createRoverButton)}
         `
     }
     
@@ -69,86 +65,87 @@ const RoverInfo = (store) => {
         return ''
     }
     
-    
-    
-    
-    
-    // ==================== TODO: Figure out why Spirit doesn't produce any pictures (and account for that if needed) ====================
-    
-    
-    
-    
-    
-    // ==================== TODO: Finish styling and make sure it works on all different screen sizes ====================
-    
-    
-    
-    
-    
-    
-    
-    let randomPhotoIndex = Math.floor(Math.random() * roverInfo.image.photos.length)
-    return (
-        `
-        <h3 class='card-title'>${currentRover}</h2>
-        <div>
-            ${createRoverInfoBlock(currentRover)}
-        </div>
-        <div>
-            <button type="button" onClick="setTimeout(updateStore, 100, store, {currentRover: '', roverInfo: ''})">Reset</button>
-        </div>
-        <div>
-            ${createPhotoCard(roverInfo.image.photos[randomPhotoIndex].img_src)}
-        </div>
-        `
-    )
+    // Check if the call to getRoverInfo returned a rover with no photos available
+    // As of this writing, Spirit rover have no available photos on the API call
+    if (roverInfo && roverInfo.image.photos.length < 1) {
+        return `${buildPage(buildFailurePage)}`
+    }
+
+    return `${buildPage(buildSuccessPage)}`
 }
 
 
 // ------------------------------------------------------  HELPERS
 
 // HOF taking cardCreator as a parameter, per project requirements
-const createAllRoverCards = (store, cardCreator) => {
-    console.log("========== DEBUG: made it to createAllRoverCards() ==========")
+const createAllRoverButtons = (store, cardCreator) => {
     // Map each rover to its card, per project requirements
     return `${store.rovers.map(rover => cardCreator(rover)).join('')}`
 }
 
-const createRoverCard= (rover) => {
-    console.log("========== DEBUG: made it to createRoverCard() ==========")
-
-    return (
-        `
-        <button type="button" onClick="setTimeout(updateStore, 100, store, {currentRover: '${rover}'})">${rover}</button>
-        `
-    )
+const createRoverButton= (rover) => {
+    return (`<button type="button" onClick="setTimeout(updateStore, 100, store, {currentRover: '${rover}'})">${rover}</button>`)
 }
 
-const createPhotoCard = (imageURL) => {
-    console.log("========== DEBUG: made it to createPhotoCard() ==========")
-    
-    return (
-        `
-        <img src="${imageURL}">
-        `
-    )
+const createPhotoCard = (imageURL) => {    
+    return `<img src="${imageURL}">`
 }
 
-const createRoverInfoBlock = (rover) => {
-    const {launchDate, landingDate, status} = rover
+const createRoverInfoBlock = (roverInfo) => {
+    const {launch_date: launchDate, landing_date: landingDate, status} = roverInfo
 
     return (`
         <ul>
-            <li>Launch date: ${launchDate}</li>
-            <li>Landing date: ${landingDate}</li>
-            <li>Status: ${status}</li>
+            <li>Launch date: <b>${launchDate}</b></li>
+            <li>Landing date: <b>${landingDate}</b></li>
+            <li>Status: <b>${status}</b></li>
         </ul>
     `)
 }
 
+// ------------------------------------------------------  PAGE BUILDERS
+
+// HOF #2
+const buildPage = (pageBuilder) => {
+    return (
+        `
+        <h3 class='card-title'>Current Rover: ${store.currentRover}</h2>
+        ${pageBuilder()}
+        `
+    )
+}
+
+const buildSuccessPage = () => {
+    const { roverInfo } = store
+    let randomPhotoIndex = Math.floor(Math.random() * roverInfo.image.photos.length)
+
+    return (
+        `
+        <div class='row'>
+            <div class='col'>
+                ${createRoverInfoBlock(roverInfo.image.photos[0].rover)}
+                <button type="button" onClick="setTimeout(updateStore, 100, store, store)"> Randomize Photo </button>
+                <button type="button" onClick="setTimeout(updateStore, 100, store, {currentRover: '', roverInfo: ''})"> Back </button>
+            </div>
+            <div class='col'>
+                ${createPhotoCard(roverInfo.image.photos[randomPhotoIndex].img_src)}
+            </div>
+        </div>
+        `
+    )
+}
+
+const buildFailurePage = () => {
+    return (
+        `
+        <p>No information currently available for ${store.currentRover}</p>
+        <button type="button" onClick="setTimeout(updateStore, 100, store, {currentRover: '', roverInfo: ''})"> Back </button>
+        `
+    )
+}
+
 
 // ------------------------------------------------------  API CALLS
-
 const getRoverInfo = (store) => {
     console.log("========== DEBUG: made it to getRoverInfo() ==========")
     
