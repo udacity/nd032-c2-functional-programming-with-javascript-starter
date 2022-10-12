@@ -1,14 +1,15 @@
 let store = {
-    user: { name: 'Nick' },
     currentRover: '',
     roverInfo: '',
     rovers: Immutable.List(['Curiosity', 'Opportunity', 'Spirit']),
+    user: { name: 'Nick' },
+    chosenDate: new Date(new Date().setDate(new Date().getDate()-1))
 }
 
 // add our markup to the page
 const root = document.getElementById('root')
 
-const updateStore = (store, newState) => {
+const updateStore = async (store, newState) => {
     store = Object.assign(store, newState)
     console.log("========== DEBUG: Store updated ==========")
     render(root, store)
@@ -38,7 +39,6 @@ const App = (store) => {
 
 // listening for load event because page should load before any JS is called
 window.addEventListener('load', () => {
-    console.log("========== DEBUG: Page loaded ==========")
     render(root, store)
 })
 
@@ -53,20 +53,39 @@ const RoverInfo = (store) => {
     
     // Create rover buttons on initial page load so we can select a rover
     if (!currentRover) {
+        console.log(`========== DEBUG: No rover selected, creating rover buttons ==========`)
+
         return `
             <p><b>Please choose a rover to learn about:</b></p>
             ${createAllRoverButtons(store, createRoverButton)}
         `
+    } 
+
+    // Once the rover is selected,
+    // display a date picker to choose a date for photos
+    if (currentRover && !roverInfo) {
+        return `
+            <p><b>Choose a date to see photos from ${currentRover}:</b></p>
+
+            <input type="date" value=${store.chosenDate} min=${manifest.landing_date} max="2018-12-31">
+            <button type="button" onClick="setTimeout(updateStore, 100, store, {currentRover: '', roverInfo: ''})"> Choose a different rover </button>
+        `
     }
+
+
+
+
+
+    // TODO: Store chosen date in store.chosenDate for the call to getRoverInfo()
+
+
     
-    // Store rover info from API call (and return to avoid accessing undefined data)
-    if (!roverInfo) {
-        getRoverInfo(store)
-        return ''
-    }
-    
+
+
+
+    getRoverInfo()
+
     // Check if the call to getRoverInfo returned a rover with no photos available
-    // As of this writing, Spirit rover have no available photos on the API call
     if (roverInfo && roverInfo.image.photos.length < 1) {
         return `${buildPage(buildFailurePage)}`
     }
@@ -144,15 +163,13 @@ const buildFailurePage = () => {
     )
 }
 
-
-// ------------------------------------------------------  API CALLS
 const getRoverInfo = (store) => {
     console.log("========== DEBUG: made it to getRoverInfo() ==========")
     
-    let { currentRover } = store
+    let { currentRover, chosenDate } = store
     console.log({currentRover})
 
-    fetch(`http://localhost:3000/${currentRover}`)
+    fetch(`http://localhost:3000/rovers/${currentRover}?date=${chosenDate}`)
         .then(res => res.json())
         .then(roverInfo => updateStore(store, { roverInfo }))
 }
