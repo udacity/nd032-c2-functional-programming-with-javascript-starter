@@ -16,7 +16,7 @@ app.get('/favicon.ico', (req, res) => {
     res.sendStatus(404);
 });
 
-app.get('/rovers/:rover', async (req, res) => {
+app.get('/:rover/:date', async (req, res) => {
     console.log("========== DEBUG: Rover API Called ==========")
 
     const rover = req.params.rover
