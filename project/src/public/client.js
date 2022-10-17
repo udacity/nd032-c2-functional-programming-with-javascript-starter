@@ -22,7 +22,7 @@ const roverStats = {
         "launch_date": "2011-11-26",
         "status": "active",
         "max_sol": 3622,
-        "max_date": "2022-10-14",
+        "max_date": "2022-10-15",
         "total_photos": 601809
     },
     "Spirit": {
@@ -81,8 +81,6 @@ const RoverInfo = (store) => {
 
     // Create rover buttons on initial page load so we can select a rover
     if (!currentRover) {
-        console.log(`========== DEBUG: No rover selected, creating rover buttons ==========`)
-
         return `
             <p><b>Please choose a rover to learn about:</b></p>
             ${createAllRoverButtons(createRoverButton)}
@@ -91,8 +89,6 @@ const RoverInfo = (store) => {
 
     // Once a rover is selected, call the API with a random date in the range
     if (currentRover && !roverInfo) {
-        console.log(`==================== DEBUG: No rover info, calling API ====================`)
-
         getRoverInfo(getRandomDate())
         return ''
     }
@@ -106,8 +102,7 @@ const RoverInfo = (store) => {
 }
 
 
-// ------------------------------------------------------  HELPERS
-
+// ---------------------------------------------------------------  HELPERS
 // HOF taking cardCreator as a parameter, per project requirements
 const createAllRoverButtons = (cardCreator) => {
     // Map each rover to its card, per project requirements
@@ -115,7 +110,11 @@ const createAllRoverButtons = (cardCreator) => {
 }
 
 const createRoverButton = (rover) => {
-    return (`<button type="button" onClick="setTimeout(updateStore, 100, store, {currentRover: '${rover}'})">${rover}</button>`)
+    return `<button type="button" onClick="setTimeout(updateStore, 100, store, {currentRover: '${rover}'})">${rover}</button>`
+}
+
+const createPhotoCard = (imageURL) => {    
+    return `<img src="${imageURL}">`
 }
 
 const getRandomDate = () => {
@@ -127,69 +126,70 @@ const getRandomDate = () => {
     return selectedDate.toISOString().replace(/T.*/,'')
 }
 
-const createPhotoCard = (imageURL) => {    
-    return `
-        <img src="${imageURL}">
-    `
-}
-
 const createRoverInfoBlock = (roverInfo) => {
-    const {launch_date: launchDate, landing_date: landingDate, status} = roverInfo
+    const { currentRover, selectedDate } = store
 
     return (`
         <ul>
-            <li>Launch date: <b>${launchDate}</b></li>
-            <li>Landing date: <b>${landingDate}</b></li>
-            <li>Status: <b>${status}</b></li>
+            <li>Launch date: <b>${roverInfo.launch_date}</b></li>
+            <li>Landing date: <b>${roverInfo.landing_date}</b></li>
+            <li>Status: <b>${roverInfo.status}</b></li>
+            <li>Most recent photo date: <b>${roverStats[currentRover].max_date}</b></li>
         </ul>
-        <p>Current photo date: ${store.selectedDate}</p>
     `)
 }
 
-// ------------------------------------------------------  PAGE BUILDERS
+const createButtonBlock = () => {
+    const { currentRover } = store
 
+    return (`
+        <button
+            type="button"
+            onClick="setTimeout(updateStore, 100, store, store)"
+        >
+            Randomize Photo
+        </button>
+        <button
+            type="button"
+            onClick="setTimeout(updateStore, 100, store, {roverInfo: ''})"
+        >
+            Randomize Date
+        </button>
+        <button
+            type="button"
+            onClick="setTimeout(updateStore, 100, store, {currentRover: '', roverInfo: ''})"
+        > 
+            Back 
+        </button>
+    `)
+}
+
+// ---------------------------------------------------------------  PAGE BUILDERS
 // HOF #2
 const buildPage = (pageBuilder) => {
     return (
         `
-        <h3 class='card-title'>Current Rover: ${store.currentRover}</h2>
-        ${pageBuilder()}
+            <h3 class='card-title'>Current Rover: ${store.currentRover}</h2>
+            ${pageBuilder()}
         `
     )
 }
 
 const buildSuccessPage = () => {
-    const { roverInfo } = store
+    const { currentRover, roverInfo } = store
     let randomPhotoIndex = Math.floor(Math.random() * roverInfo.image.photos.length)
 
     return (
         `
-        <div class='row'>
-            <div class='col'>
-                ${createRoverInfoBlock(roverInfo.image.photos[0].rover)}
-                <button
-                    type="button"
-                    onClick="setTimeout(updateStore, 100, store, store)"
-                >
-                    Randomize Photo 
-                </button>
-                <button
-                    type="button"
-                    onClick="setTimeout(updateStore, 100, store, {roverInfo: ''})"
-                > 
-                    Randomize Date 
-                </button>
-                <button
-                    type="button"
-                    onClick="setTimeout(updateStore, 100, store, {currentRover: '', roverInfo: ''})"
-                > 
-                    Back 
-                </button>
+            <div class='row'>
+                <div class='col'>
+                    ${createRoverInfoBlock(roverInfo.image.photos[0].rover)}
+                    ${createButtonBlock()}
+                </div>
+                <div class='col'>
+                    ${createPhotoCard(roverInfo.image.photos[randomPhotoIndex].img_src)}
+                </div>
             </div>
-            <div class='col'>
-                ${createPhotoCard(roverInfo.image.photos[randomPhotoIndex].img_src)}
-            </div>
-        </div>
         `
     )
 }
@@ -197,17 +197,18 @@ const buildSuccessPage = () => {
 const buildFailurePage = () => {
     return (
         `
-        <p>No photos available for ${store.currentRover} on ${store.selectedDate}</p>
-        <button
-            type="button"
-            onClick="setTimeout(updateStore, 100, store, {currentRover: '', roverInfo: ''})"
-        >
-            Try again
-        </button>
+            <p>No photos available for ${store.currentRover} on ${store.selectedDate}</p>
+            <button
+                type="button"
+                onClick="setTimeout(updateStore, 100, store, {currentRover: '', roverInfo: ''})"
+            >
+                Try again
+            </button>
         `
     )
 }
 
+// ---------------------------------------------------------------  API CALL
 const getRoverInfo = (selectedDate) => {    
     let { currentRover } = store
 
