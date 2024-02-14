@@ -21,15 +21,6 @@ const render = async (root, state) => {
 
 // create content
 const App = (state) => {
-
-    //let {rovers, apod} = state;
-    //const apod = state.get("apod")
-    //const user = state.get("user").get("name");
-    //const rovers = state.get("rovers").toArray();
-    //const currentRover = state.get("currentRover");
-    //const roversString = toStrArgs(rovers);
-
-
     return `
         <header></header>
         <main>
